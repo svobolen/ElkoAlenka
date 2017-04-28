@@ -1,0 +1,47 @@
+<RCC>
+    <qresource prefix="/">
+        <file>color.frag</file>
+        <file>event.vert</file>
+        <file>montageHeader.cl</file>
+        <file>rectangleLine.vert</file>
+        <file>signal.vert</file>
+        <file>icons/edit.png</file>
+        <file>icons/fit.png</file>
+        <file>icons/zoom-in.png</file>
+        <file>icons/play.png</file>
+        <file>icons/settings.png</file>
+        <file>icons/zoom_in_horizontal.png</file>
+        <file>icons/zoom_in_vertical.png</file>
+        <file>icons/zoom_out_horizontal.png</file>
+        <file>icons/zoom_out_vertical.png</file>
+        <file>images/brains/brain2.jpg</file>
+        <file>images/brains/brain1.png</file>
+        <file>images/brains/brain3.png</file>
+        <file>images/brains/brain4.png</file>
+        <file>images/drawer@4x.png</file>
+        <file>images/menu@4x.png</file>
+        <file>images/plus.png</file>
+        <file>images/Doctor_Hibbert.png</file>
+        <file>pages/Alenka.qml</file>
+        <file>pages/BasicElectrode.qml</file>
+        <file>pages/Brain.qml</file>
+        <file>pages/BrainForm.qml</file>
+        <file>pages/DragTrack.qml</file>
+        <file>pages/DragTrackForm.qml</file>
+        <file>pages/Electrode.qml</file>
+        <file>pages/ElectrodeAddingDialog.qml</file>
+        <file>pages/ElectrodeAddingDialogForm.qml</file>
+        <file>pages/ElectrodeManager.qml</file>
+        <file>pages/ElectrodeManagerForm.qml</file>
+        <file>pages/ElectrodePlacement.qml</file>
+        <file>pages/ElectrodePlacementForm.qml</file>
+        <file>pages/ElectrodeSignalLink.qml</file>
+        <file>pages/ElectrodeSignalLinkForm.qml</file>
+        <file>pages/ImageManager.qml</file>
+        <file>pages/ImageManagerForm.qml</file>
+        <file>pages/OpenSession.qml</file>
+        <file>pages/XmlModels.qml</file>
+        <file>main.qml</file>
+        <file>qtquickcontrols2.conf</file>
+    </qresource>
+</RCC>
