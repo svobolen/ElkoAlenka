@@ -22,7 +22,6 @@
         <file>images/menu@4x.png</file>
         <file>images/plus.png</file>
         <file>images/Doctor_Hibbert.png</file>
-        <file>pages/Alenka.qml</file>
         <file>pages/BasicElectrode.qml</file>
         <file>pages/Brain.qml</file>
         <file>pages/BrainForm.qml</file>
@@ -43,5 +42,9 @@
         <file>pages/XmlModels.qml</file>
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>+universal/SpinBox.qml</file>
+        <file>+universal/Button.qml</file>
+        <file>+universal/Label.qml</file>
+        <file>+universal/Switch.qml</file>
     </qresource>
 </RCC>

@@ -127,73 +127,79 @@ Item {
                     onPressAndHold: {
                         menu.open()
                     }
+
+                }
+            }
+            Menu {
+                id: menu
+                x: root.width/2
+                y: root.height/2
+                width: 150
+                closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
+                MenuItem {
+                    text: qsTr("Fix position")
+                    onTriggered: {
+                        draggable = false
+                        mouseArea.drag.target = null
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Change position")
+                    onTriggered: {
+                        draggable = true
+                        mouseArea.drag.target = electrode
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Change color...")
+                    onTriggered: colorMenu.open()
+
                     Menu {
-                        id: menu
-                        x: root.width/2
-                        y: root.height/2
-                        width: 150
+                        id: colorMenu
+                        x: parent.width
+                        y: 0
+                        width: 120
+                        title: qsTr("Change color...")
                         closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
-                        MenuItem {
-                            text: qsTr("Fix position")
-                            onTriggered: {
-                                draggable = false
-                                mouseArea.drag.target = null
-                            }
+
+                        signal menuClicked(color itemColor)
+                        onMenuClicked: {
+                            electrode.color = itemColor
+                            sourceBorder.border.color = (Qt.colorEqual(itemColor, "white")) ? "black" : itemColor
+                            root.parent.color = itemColor
+                            colorMenu.close()
                         }
-                        MenuItem {
-                            text: qsTr("Change position")
-                            onTriggered: {
-                                draggable = true
-                                mouseArea.drag.target = electrode
-                            }
-                        }
-                        MenuItem {
-                            text: qsTr("Change color...")
-                            onTriggered: colorMenu.open()
 
-                            Menu {
-                                id: colorMenu
-                                x: parent.width
-                                y: 0
-                                width: 120
-                                title: qsTr("Change color...")
-                                closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
-
-                                signal menuClicked(color itemColor)
-                                onMenuClicked: {
-                                    electrode.color = itemColor
-                                    sourceBorder.border.color = (Qt.colorEqual(itemColor, "white")) ? "black" : itemColor
-                                    root.parent.color = itemColor
-                                    colorMenu.close()
-                                }
-
-                                Column {
-                                    spacing: 0
-                                    Repeater {
-                                        model: ["purple", "blue", "green", "yellow", "orange", "red"]
-                                        MenuItem {
-                                            Rectangle {anchors.fill: parent; color: modelData}
-                                            onTriggered: colorMenu.menuClicked(modelData)
-                                        }
-                                    }
-                                    MenuItem {
-                                        text: "default"
-                                        onTriggered: colorMenu.menuClicked("white")
-                                    }
+                        Column {
+                            spacing: 0
+                            Repeater {
+                                model: ["purple", "blue", "green", "yellow", "orange", "red"]
+                                MenuItem {
+                                    Rectangle {anchors.fill: parent; color: modelData}
+                                    onTriggered: colorMenu.menuClicked(modelData)
                                 }
                             }
-                        }
-                        MenuItem {
-                            text: qsTr("Reset position")
-                            onTriggered: {
-                                electrode.parent = root
-                                electrode.x = 0
-                                electrode.y = 0
-                                electrode.scale = 1
-                                electrode.rotation = 0
+                            MenuItem {
+                                text: "default"
+                                onTriggered: colorMenu.menuClicked("white")
                             }
                         }
                     }
+                }
+                MenuItem {
+                    text: qsTr("Reset position")
+                    onTriggered: {
+                        electrode.parent = root
+                        electrode.x = 0
+                        electrode.y = 0
+                        electrode.scale = 1
+                        electrode.rotation = 0
+                    }
+                }
+                MenuItem {
+                    text: qsTr("Close menu")
+                    onTriggered:
+                        menu.close()
                 }
             }
         }

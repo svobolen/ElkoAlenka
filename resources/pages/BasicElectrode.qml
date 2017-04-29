@@ -76,10 +76,12 @@ Item {
                                 Text {
                                     id: electrodeText
                                     text: dropArea.defaultName
-                                    font.pixelSize: root.size/2
+                                    font.pixelSize: root.size / 2
+                                    minimumPixelSize: 10
                                     anchors.fill: parent
                                     horizontalAlignment:Text.AlignHCenter
                                     verticalAlignment: Text.AlignVCenter
+                                    fontSizeMode: Text.Fit
                                 }
                             }
 

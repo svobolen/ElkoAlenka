@@ -4,10 +4,13 @@ import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.0
 
 Controls.SplitView {
+    id: electrodeSignalLink
+
     property var name
     property var electrodes
     property int maxSpikes: 0
     property int minSpikes: 0
+    property string path: window.file
 
     property alias elecRep: elecRep
     property alias dragRep: dragRep
@@ -40,7 +43,10 @@ Controls.SplitView {
                 }
             }
 
-            XmlModels {id: xmlModels }
+            XmlModels {
+                id: xmlModels
+                sourcePath: path
+            }
         }
         ScrollIndicator.vertical: ScrollIndicator { }
     }
@@ -78,7 +84,6 @@ Controls.SplitView {
                 }
             }
         }
-
 
         ScrollIndicator.vertical: ScrollIndicator { }
         ScrollIndicator.horizontal: ScrollIndicator { }

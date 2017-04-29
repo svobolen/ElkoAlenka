@@ -1,6 +1,5 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.0
-//import QtMultimedia 5.8
 
 Image {
     id: brainImage
@@ -14,6 +13,7 @@ Image {
     property alias menu: menu
     property alias changeMenu: changeMenu
     property alias deleteMenu: deleteMenu
+    property alias closeMenu: closeMenu
     property alias brainImage: brainImage
 
     source: ""
@@ -40,7 +40,7 @@ Image {
 
     CheckBox {
         id: checkbox
-        visible: !(brainImage.source == plusImgSource)
+        visible: brainImage.source != plusImgSource
         checked: false
         anchors.fill: parent
         indicator: Rectangle {
@@ -66,6 +66,13 @@ Image {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        scrollGestureEnabled: false
+        onPressAndHold: {
+            menu.open()
+        }
+        onPressedChanged: {
+            console.log()
+        }
 
         Menu {
             id: menu
@@ -79,6 +86,10 @@ Image {
             MenuItem {
                 id: deleteMenu
                 text: qsTr("Delete")
+            }
+            MenuItem {
+                id: closeMenu
+                text: qsTr("Close menu")
             }
         }
     }

@@ -1,7 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
-import QtQuick.Controls.Universal 2.1
-
+import "../+universal"
 
 Popup {
     property alias addDialog: addDialog
@@ -38,7 +37,6 @@ Popup {
             id: rowSpinBox
             from: 1
             value: 1
-            editable: true
         }
 
         Label {
@@ -49,19 +47,18 @@ Popup {
             id: columnSpinBox
             from: 1
             value: 5
-            editable: true
         }
 
         Button {
             id: okButton
             text: qsTr("Add")
+            width: 150
         }
 
         Button {
             id: closeButton
             text: qsTr("Cancel")
-            highlighted: true
-            Universal.accent: Universal.Orange
+            width: 150
         }
     }
 }

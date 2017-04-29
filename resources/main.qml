@@ -1,10 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Universal 2.1
 import QtQuick.Window 2.2
 import "./pages" as Pages
+import "./+universal"
 
 Page {
     id: window
@@ -18,26 +19,15 @@ Page {
     Universal.accent: Universal.Cyan
 
     property var images
+    property string file: "file:///" + filePath + ".mont"
     property alias confirmButton: confirmButton
-    property bool fullscreen: false
 
     header: ToolBar {
         height: 100
 
         background: Rectangle {
-            color: "skyblue"
+            color: Universal.accent
             opacity: 1
-        }
-        MouseArea {
-            anchors.fill: parent
-            onDoubleClicked: {
-                if (fullscreen) {
-                    window.showMaximized()
-                } else {
-                    window.showFullScreen()
-                }
-                fullscreen = !fullscreen
-            }
         }
 
         RowLayout {
@@ -107,10 +97,6 @@ Page {
                     MenuItem {
                         text: qsTr("About")
                         onTriggered: aboutDialog.open()
-                    }
-                    MenuItem {
-                        text: qsTr("Exit")
-                        onTriggered: Qt.quit()
                     }
                 }
             }
@@ -190,7 +176,6 @@ Page {
                 ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
                 ListElement { title: "Link Signal with Electrode"; source: "qrc:/pages/ElectrodeSignalLink.qml"}
                 ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
-                ListElement { title: "Alenka"; source: "qrc:/pages/Alenka.qml" }
             }
         }
     }
@@ -245,8 +230,6 @@ Page {
         focus: true
         x: (window.width - width) / 2
         y: window.height / 6
-        width: Math.min(window.width, window.height) * 3 / 7
-        height: aboutColumn.implicitHeight + topPadding + bottomPadding
 
         Column {
             id: aboutColumn
@@ -257,22 +240,13 @@ Page {
                 font.bold: true
             }
             Label {
-                width: aboutDialog.availableWidth
-                text: "Author:    Lenka Svobodová "
-                wrapMode: Label.Wrap
-                font.pixelSize: 12
+                text: "Author:   Lenka Svobodová "
             }
             Label {
-                width: aboutDialog.availableWidth
-                text: "E-mail:    svobole5@fel.cvut.cz "
-                wrapMode: Label.Wrap
-                font.pixelSize: 12
+                text: "E-mail:   svobole5@fel.cvut.cz "
             }
             Label {
-                width: aboutDialog.availableWidth
-                text: "Year:      2017"
-                wrapMode: Label.Wrap
-                font.pixelSize: 12
+                text: "Year:     2017"
             }
             Button {
                 id: okButton
@@ -348,5 +322,4 @@ Page {
         }
     }
 
-//    Component.onCompleted: showMaximized()
 }

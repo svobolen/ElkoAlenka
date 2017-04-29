@@ -130,7 +130,7 @@ private slots:
 	void cleanChanged(bool clean);
 	void closeFileDestroy();
 	void setEnableFileActions(bool enable);
-//	void setToolBarVisibility(bool enable);
+	void setFilePathInQML();
 };
 
 #endif // SIGNALFILEBROWSERWINDOW_H

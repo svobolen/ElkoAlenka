@@ -51,6 +51,9 @@
 #include <QQuickWidget>
 #include <QStackedWidget>
 #include <QPushButton>
+#include <QQmlContext>
+#include <QVariant>
+#include <QString>
 
 #include <locale>
 #include <algorithm>
@@ -108,8 +111,6 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	view = new QQuickWidget(this);
 	view->setResizeMode(QQuickWidget::SizeRootObjectToView);
 	view->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
-//	view->setVisible(false);
-//	view->showFullScreen();
 
 	signalViewer = new SignalViewer(this);
 
@@ -234,20 +235,24 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	shiftAction->setCheckable(true);
 	shiftAction->setToolTip("Press Shift.");
 	shiftAction->setStatusTip(shiftAction->toolTip());
-	connect(shiftAction, &QAction::toggled, [this, shiftAction] () {
-		signalViewer->getCanvas()->shiftButtonCheckEvent(shiftAction->isChecked());
-	});
 
 	QAction* ctrlAction = new QAction("Ctrl", this);
 	ctrlAction->setShortcut(QKeySequence("Ctrl"));
 	ctrlAction->setCheckable(true);
 	ctrlAction->setToolTip("Press Ctrl.");
 	ctrlAction->setStatusTip(ctrlAction->toolTip());
-	connect(ctrlAction, &QAction::toggled, [this, ctrlAction] () {
-		signalViewer->getCanvas()->ctrlButtonCheckEvent(ctrlAction->isChecked());
+
+	connect(shiftAction, &QAction::toggled, [this, shiftAction, ctrlAction] () {
+		signalViewer->getCanvas()->shiftButtonCheckEvent(shiftAction->isChecked());
+		if (shiftAction->isChecked())
+			ctrlAction->setChecked(false);
 	});
 
-
+	connect(ctrlAction, &QAction::toggled, [this, ctrlAction, shiftAction] () {
+		signalViewer->getCanvas()->ctrlButtonCheckEvent(ctrlAction->isChecked());
+		if (ctrlAction->isChecked())
+			shiftAction->setChecked(false);
+	});
 
 	// Construct Spikedet actions.
 	runSpikedetAction = new QAction(QIcon(":/icons/play.png"), "Run Spikedet Analysis", this);
@@ -425,7 +430,7 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	spikedetToolBar->addAction(runSpikedetAction);
 	spikedetToolBar->addAction(spikedetSettingsAction);
 
-	// Construct Switch action.
+	// Construct Switch button.
 	QPushButton* switchButton = new QPushButton("Switch to Elko", this);
 	switchButton->setMinimumSize(QSize(150,40));
 	switchButton->setToolTip("Switch between Alenka and Elko.");
@@ -440,6 +445,8 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 		{
 			stackedWidget->setCurrentIndex(0);
 			switchButton->setText("Switch to Alenka");
+			setFilePathInQML();
+
 			fileToolBar->hide();
 			filterToolBar->hide();
 			selectToolBar->hide();
@@ -452,12 +459,13 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 			montageManagerDockWidget->hide();
 			filterManagerDockWidget->hide();
 			menuBar()->hide();
+			statusBar()->hide();
 		}
 		else
 		{
 			stackedWidget->setCurrentIndex(1);
 			switchButton->setText("Switch to Elko");
-//			setToolBarVisibility(true);
+
 			fileToolBar->show();
 			filterToolBar->show();
 			selectToolBar->show();
@@ -470,8 +478,16 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 			montageManagerDockWidget->show();
 			filterManagerDockWidget->show();
 			menuBar()->show();
+			statusBar()->show();
 		}
 	});
+
+	// Construct Close button.
+	QPushButton* closeButton = new QPushButton("Exit", this);
+	closeButton->setMinimumSize(QSize(40,40));
+	closeButton->setToolTip("Close.");
+	closeButton->setStatusTip(closeButton->toolTip());
+	connect(closeButton, SIGNAL(clicked(bool)), this, SLOT(close()));
 
 	// Construct Switch apps tool bar.
 	QToolBar* switchToolBar = addToolBar("Switch Tool Bar");
@@ -479,6 +495,7 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	switchToolBar->layout()->setSpacing(spacing*3);
 
 	switchToolBar->addWidget(switchButton);
+	switchToolBar->addWidget(closeButton);
 
 	// Construct File menu.
 	QMenu* fileMenu = menuBar()->addMenu("&File");
@@ -1346,18 +1363,15 @@ void SignalFileBrowserWindow::setEnableFileActions(bool enable)
 	runSpikedetAction->setEnabled(enable);
 }
 
-/*void SignalFileBrowserWindow::setToolBarVisibility(bool enable) {
-	fileToolBar->setVisible(enable);
-	filterToolBar->setVisible(enable);
-	selectToolBar->setVisible(enable);
-	keyboardToolBar->setVisible(enable);
-	spikedetToolBar->setVisible(enable);
-	zoomToolBar->setVisible(enable);
-	trackManagerDockWidget->setVisible(enable);
-	eventManagerDockWidget->setVisible(enable);
-	eventTypeManagerDockWidget->setVisible(enable);
-	montageManagerDockWidget->setVisible(enable);
-	filterManagerDockWidget->setVisible(enable);
-	menuBar()->setVisible(enable);
+void SignalFileBrowserWindow::setFilePathInQML()
+{
+	if (file != nullptr)
+	{
+		QString filePath = QString::fromStdString(file->getFilePath());
+		view->rootContext()->setContextProperty("filePath", QVariant::fromValue(filePath));
+	}
+	else
+	{
+		view->rootContext()->setContextProperty("filePath", QVariant::fromValue(QStringLiteral("")));
+	}
 }
-*/

@@ -4,7 +4,7 @@ TEMPLATE = app console
 
 CONFIG += c++11
 
-QT += widgets websockets charts qml quick quickwidgets
+QT += widgets websockets charts qml quick quickwidgets core
 
 HEADERS += \
 	$$files(src/DataModel/*.h) \
@@ -26,4 +26,3 @@ RESOURCES += \
 # Tests.
 INCLUDEPATH += unit-test/googletest/googletest/include unit-test/googletest/googletest
 SOURCES += $$files(unit-test/*.cpp) # TODO: Include also tests from Alenka-File/Signal.
-

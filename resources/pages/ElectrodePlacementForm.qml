@@ -1,8 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Controls
-import QtQuick.Controls 2.0
-
+import QtQuick.Controls 2.1
+import "../+universal"
 
 Controls.SplitView {
     id: electrodePlacement
@@ -96,13 +96,12 @@ Controls.SplitView {
             id: rect
             width: 1/4*electrodePlacement.width
             height: Math.max(column.height, electrodePlacement.height)
-            Layout.minimumWidth: 100
             color: "white"
 
             Column {
                 id: column
-                spacing: 10
-                padding: 5
+                spacing: 15
+                padding: 20
 
                 Switch {
                     id: zoomSwitch
@@ -134,7 +133,7 @@ Controls.SplitView {
                     spacing: 5
                     Button {
                         id: resetButton
-                        text: qsTr("Reset")
+                        text: qsTr("Reset electrodes")
                     }
                     Button {
                         id: resetZoomButton
@@ -261,17 +260,20 @@ Controls.SplitView {
                             text: rows + "x" + columns
                             anchors.verticalCenter: parent.verticalCenter
                         }
-                        Button {
+                        RoundButton {
                             id: plusButton
                             text: "+"
-                            background: Rectangle {
-                                implicitWidth: 20
-                                implicitHeight: 20
-                                color: plusButton.down ? "#d6d6d6" : "#f6f6f6"
-                                border.color: "black"
-                                border.width: 1
-                                radius: 20
-                            }
+                            height: 40
+                            font.pixelSize: 40
+                            highlighted: true
+//                            background: Rectangle {
+//                                implicitWidth: 20
+//                                implicitHeight: 20
+//                                color: plusButton.down ? "#d6d6d6" : "#f6f6f6"
+//                                border.color: "black"
+//                                border.width: 1
+//                                radius: 20
+//                            }
                             anchors.verticalCenter: parent.verticalCenter
                             onClicked: {
                                 var component = Qt.createComponent("qrc:/pages/Electrode.qml")

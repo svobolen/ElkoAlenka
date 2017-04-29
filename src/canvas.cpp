@@ -802,7 +802,7 @@ void Canvas::mousePressEvent(QMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		if (event->modifiers() == Qt::ShiftModifier || event->modifiers() == Qt::ControlModifier || (isShiftChecked ^ isCtrlChecked))
+		if (event->modifiers() == Qt::ShiftModifier || event->modifiers() == Qt::ControlModifier || isShiftChecked || isCtrlChecked)
 		{
 			if (ready() && 0 <= cursorTrack && cursorTrack < signalProcessor->getTrackCount())
 			{

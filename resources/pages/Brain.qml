@@ -1,9 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Dialogs 1.2
 
-
-BrainForm {
-
+BrainForm {    
     mouseArea.onClicked: {
         if (brainImage.source == plusImgSource) {
             loader.sourceComponent = fileComp
@@ -12,9 +10,9 @@ BrainForm {
         }
     }
 
-    mouseArea.onPressAndHold: {
-        menu.open()
-    }
+//    mouseArea.onPressAndHold: {
+//        menu.open()
+//    }
 
     changeMenu.onTriggered: {
         loader.sourceComponent = fileComp
@@ -60,6 +58,10 @@ BrainForm {
             }
             console.log("Image has been deleted.")
         }
+    }
+
+    closeMenu.onTriggered: {
+        menu.close();
     }
 
     checkbox.onCheckStateChanged:  {

@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.0
-//import "../controls" as MyControls
+import "../+universal"
 
 Page {
     id: item
@@ -112,9 +112,7 @@ Page {
                         property alias gridColumns: grid.columnCount
                         SpinBox {
                             id: gridSpin
-                            value: 0
                             anchors.verticalCenter: parent.verticalCenter
-                            editable: true
                         }
                         Label {
                             text: grid.rowCount + "x" + grid.columnCount
@@ -139,18 +137,19 @@ Page {
     Button {
         id: addButton
         text: qsTr("Add new electrode")
-        font.pixelSize: 30
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.top: parent.top
         anchors.right: parent.right
-        anchors.margins: 15
+        anchors.margins: 50
+        highlighted: true
     }
 
     Button {
         id: resetButton
         text: qsTr("Reset choice")
-        anchors.top: addButton.bottom
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.margins: 15
+        anchors.margins: 50
+        highlighted: true
     }
 
     Popup {
@@ -169,6 +168,7 @@ Page {
             }
             Button {
                 text: qsTr("OK")
+                width: 150
                 onClicked: { infoPopup.close() }
             }
         }

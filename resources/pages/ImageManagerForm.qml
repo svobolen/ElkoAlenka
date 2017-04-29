@@ -20,7 +20,6 @@ Page {
         ListElement { sourcePath: "qrc:/images/plus.png"}
     }
 
-
     property alias swipe: swipe
     property alias imageManager: imageManager
 
@@ -35,19 +34,7 @@ Page {
             swipe.addItem(newPage.createObject(swipe, {"imageModel": pluses}))
         }
     }
-    //    PinchArea {
-    //        anchors.fill: parent
-    //        pinch.target: secondPage
-    //        pinch.minimumScale: 1
-    //        pinch.maximumScale: 10
-    //        pinch.dragAxis: Pinch.XAndYAxis
-    //        onSmartZoom: { secondPage.scale = pinch.scale }
-    //        onPinchFinished: {
-    //            secondPage.scale = 1
-    //            secondPage.x = swipe.currentItem.width * swipe.currentIndex
-    //            secondPage.y = 0
-    //        }
-    //    }
+
 
     Component {
         id: newPage
@@ -88,6 +75,20 @@ Page {
                     }
                 }
             }
+
+//            PinchArea {
+//                anchors.fill: parent
+//                pinch.target: secondPage
+//                pinch.minimumScale: 1
+//                pinch.maximumScale: 10
+//                pinch.dragAxis: Pinch.XAndYAxis
+//                onSmartZoom: { secondPage.scale = pinch.scale }
+//                onPinchFinished: {
+//                    secondPage.scale = 1
+//                    secondPage.x = swipe.currentItem.width * swipe.currentIndex
+//                    secondPage.y = 0
+//                }
+//            }
         }
     }
 

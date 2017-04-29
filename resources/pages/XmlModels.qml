@@ -2,10 +2,11 @@ import QtQuick 2.7
 import QtQuick.XmlListModel 2.0
 
 Item {
+    id: xmlModels
+
     property alias trackModel: trackModel
     property alias eventModel: eventModel
-    property string sourcePath: "qrc:/xmls/sample.gdf.mont"
-
+    property string sourcePath
     XmlListModel {
         id: trackModel
         source: sourcePath
