@@ -10,9 +10,9 @@ BrainForm {
         }
     }
 
-//    mouseArea.onPressAndHold: {
-//        menu.open()
-//    }
+    mouseArea.onPressAndHold: {
+        menu.open()
+    }
 
     changeMenu.onTriggered: {
         loader.sourceComponent = fileComp

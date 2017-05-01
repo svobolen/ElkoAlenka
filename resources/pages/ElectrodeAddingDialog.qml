@@ -2,13 +2,13 @@ import QtQuick 2.7
 
 ElectrodeAddingDialogForm {
 
-    okButton.onClicked: {
+    addDialog.onAccepted: {
         addElectrode(columnSpinBox.value, rowSpinBox.value)
         addDialog.close()
         setDefaultValues()
     }
 
-    cancelButton.onClicked: {
+    addDialog.onRejected: {
         addDialog.close()
         setDefaultValues()
     }

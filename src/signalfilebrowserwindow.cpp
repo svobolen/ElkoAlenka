@@ -110,6 +110,7 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 
 	view = new QQuickWidget(this);
 	view->setResizeMode(QQuickWidget::SizeRootObjectToView);
+	setFilePathInQML();		//define filePath
 	view->setSource(QUrl(QStringLiteral("qrc:/main.qml")));
 
 	signalViewer = new SignalViewer(this);
@@ -431,21 +432,22 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	spikedetToolBar->addAction(spikedetSettingsAction);
 
 	// Construct Switch button.
-	QPushButton* switchButton = new QPushButton("Switch to Elko", this);
+	switchButton = new QPushButton("Switch to Elko", this);
 	switchButton->setMinimumSize(QSize(150,40));
 	switchButton->setToolTip("Switch between Alenka and Elko.");
 	switchButton->setStatusTip(switchButton->toolTip());
+	switchButton->setEnabled(false);
 
-	connect(switchButton, &QPushButton::pressed, [this, switchButton, fileToolBar, filterToolBar,
+	connect(switchButton, &QPushButton::pressed, [this, fileToolBar, filterToolBar,
 			selectToolBar, keyboardToolBar, spikedetToolBar, zoomToolBar, trackManagerDockWidget,
 			eventManagerDockWidget, eventTypeManagerDockWidget, montageManagerDockWidget,
 			filterManagerDockWidget, stackedWidget]() {
 
 		if (stackedWidget->currentIndex() == 1)
 		{
+			setFilePathInQML();
 			stackedWidget->setCurrentIndex(0);
 			switchButton->setText("Switch to Alenka");
-			setFilePathInQML();
 
 			fileToolBar->hide();
 			filterToolBar->hide();
@@ -797,7 +799,6 @@ void SignalFileBrowserWindow::openFile()
 	{
 		allowSaveOnClean = false;
 	}
-
 	setWindowTitle(fileInfo.fileName() + " - " + TITLE);
 
 	// Check for any values in InfoTable that could make trouble.
@@ -977,6 +978,8 @@ void SignalFileBrowserWindow::openFile()
 	int ms = 1000*PROGRAM_OPTIONS["autosaveInterval"].as<int>();
 	autoSaveTimer->setInterval(ms);
 	autoSaveTimer->start();
+
+	switchButton->setEnabled(true);
 }
 
 bool SignalFileBrowserWindow::closeFile()
@@ -1324,9 +1327,14 @@ void SignalFileBrowserWindow::sendSyncMessage()
 void SignalFileBrowserWindow::cleanChanged(bool clean)
 {
 	if (clean && allowSaveOnClean)
+	{
 		saveFileAction->setEnabled(true);
+		switchButton->setEnabled(true);
+	}
 	else
+	{
 		saveFileAction->setEnabled(!clean);
+	}
 }
 
 void SignalFileBrowserWindow::closeFileDestroy()
@@ -1345,6 +1353,7 @@ void SignalFileBrowserWindow::closeFileDestroy()
 	eventTypeManager->changeFile(nullptr);
 	montageManager->changeFile(nullptr);
 	filterManager->changeFile(nullptr);
+	switchButton->setEnabled(false);
 
 	delete eventTypeTable; eventTypeTable = nullptr;
 	delete montageTable; montageTable = nullptr;
@@ -1367,8 +1376,13 @@ void SignalFileBrowserWindow::setFilePathInQML()
 {
 	if (file != nullptr)
 	{
+		executeWithCLocale([this] () {
+			file->saveSecondaryFile(autoSaveName);
+			logToFileAndConsole("Autosaving to " << autoSaveName);
+		});
+
 		QString filePath = QString::fromStdString(file->getFilePath());
-		view->rootContext()->setContextProperty("filePath", QVariant::fromValue(filePath));
+		view->rootContext()->setContextProperty("filePath", QVariant::fromValue("file:///" + filePath + ".mont.autosave"));
 	}
 	else
 	{

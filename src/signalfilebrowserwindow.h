@@ -37,6 +37,7 @@ class QTimer;
 class QUndoStack;
 class UndoCommandFactory;
 class KernelCache;
+class QPushButton;
 
 /**
  * @brief This class implements the top level window of the program.
@@ -102,6 +103,7 @@ private:
 	QAction* closeFileAction;
 	QAction* runSpikedetAction;
 	bool allowSaveOnClean;
+	QPushButton* switchButton;
 
 	std::vector<QMetaObject::Connection> connectVitness(const DataModelVitness* vitness, std::function<void ()> f);
 	void mode(int m);

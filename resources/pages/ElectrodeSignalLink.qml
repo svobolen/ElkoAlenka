@@ -10,7 +10,7 @@ ElectrodeSignalLinkForm {
         fillLinkedElectrodesList()
         titleLabel.text = "Electrode Placement"
         listView.currentIndex = 4
-        stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": linkedElectrodesList, "images": window.images,"name": "Electrode Placement",
+        stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": linkedElectrodesList, "images": window.images,"name": qsTr("Electrode Placement"),
                            "minSpikes": minSpikes, "maxSpikes": maxSpikes} )
     }
 

@@ -1,5 +1,5 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 
 Item {
     id: root
@@ -22,12 +22,15 @@ Item {
 
         Column {
             id: column
+
             Repeater {
                 id: rowRep
                 model: rowCount
+
                 Row {
                     id: row
                     property alias colRep: columnRep
+
                     Repeater {
                         id: columnRep
                         model: columnCount
@@ -35,15 +38,17 @@ Item {
                         DropArea {
                             id: dropArea
                             readonly property int defaultName: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
-                            property alias name: electrodeText.text
                             property int columnCount: root.columnCount  //for console logs (signal link)
                             property int rowCount: root.rowCount        //for console logs (signal link)
                             property string trackName: ""
                             property bool alreadyContainsDrag: false
                             property int trackId: -1
                             property bool nameToChange: true
-                            property alias colorFill: dropRectangle.color
                             property int spikes: 0
+
+                            property alias name: electrodeText.text
+                            property alias colorFill: dropRectangle.color
+
 
                             width: size; height: size
                             enabled: droppingEnabled

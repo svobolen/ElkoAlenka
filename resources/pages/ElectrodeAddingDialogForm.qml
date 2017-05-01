@@ -2,10 +2,8 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import "../+universal"
 
-Popup {
+Dialog {
     property alias addDialog: addDialog
-    property alias okButton: okButton
-    property alias cancelButton: closeButton
     property alias rowSpinBox: rowSpinBox
     property alias columnSpinBox: columnSpinBox
 
@@ -14,20 +12,14 @@ Popup {
     focus: true
     x: (window.width - width) / 2
     y: (window.height - height)/6
+    title: qsTr("<b>Add new strip/grid</b>")
+    standardButtons: Dialog.Ok | Dialog.Cancel
 
     Grid {
         id: dialogGrid
         columns: 2
-        spacing: 10
+        spacing: 20
         verticalItemAlignment: Grid.AlignVCenter
-
-        Label {
-            text: qsTr("<b>Add new strip/grid</b>")
-        }
-
-        Label {
-            text: " "
-        }
 
         Label {
             text: qsTr("Rows")
@@ -47,18 +39,6 @@ Popup {
             id: columnSpinBox
             from: 1
             value: 5
-        }
-
-        Button {
-            id: okButton
-            text: qsTr("Add")
-            width: 150
-        }
-
-        Button {
-            id: closeButton
-            text: qsTr("Cancel")
-            width: 150
         }
     }
 }

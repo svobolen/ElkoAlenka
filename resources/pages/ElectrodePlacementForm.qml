@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.1
+import QtQuick.Controls.Universal 2.1
 import "../+universal"
 
 Controls.SplitView {
@@ -9,8 +10,8 @@ Controls.SplitView {
 
     property alias zoomSwitch: zoomSwitch
     property alias fixButton: fixButton
-    property alias resetButton: resetButton
     property alias resetZoomButton: resetZoomButton
+    property alias resetButton: resetButton
     property alias comboBox: comboBox
     property alias electrodeRep: electrodeRep
     property alias electrodePlacement: electrodePlacement
@@ -19,7 +20,8 @@ Controls.SplitView {
     property alias column: column
     property alias imageArea: imageArea
     property alias gradientMouse: gradientMouse
-    property alias colorGradientPopup: colorGradientPopup
+    property alias gradient: gradient
+    property alias colorDialog: colorDialog
 
     property var name
     property int zHighest: 2
@@ -28,18 +30,26 @@ Controls.SplitView {
     property var images: []
     property int minSpikes: 0
     property int maxSpikes: 0
+    property int customMinSpikes: 0
+    property int customMaxSpikes: 0
     property ListModel electrodes: ListModel {}
+
     orientation: Qt.Horizontal
+    onCurrIndexChanged: {
+        if (currIndex > 0) {
+            imageArea.children[currIndex].z = ++zHighest    //clicked electrode on the top
+        }
+    }
+
 
     DropArea {
         id: imageArea
-        width: 3/4*parent.width
-        height: parent.height
-        Layout.minimumWidth: 3/4*parent.width
+        Layout.minimumWidth: 3/4 * window.width
 
         Rectangle {
             anchors.fill: parent
             color: "white"
+            height: window.height
 
             Grid {
                 id: imagesGrid
@@ -74,7 +84,6 @@ Controls.SplitView {
                     hoverEnabled: true
                     anchors.fill: parent
                     anchors.centerIn: parent
-                    drag.target: imageArea
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
                     onWheel: {
                         imageArea.scale += imageArea.scale * wheel.angleDelta.y / 120 / 10;
@@ -86,15 +95,15 @@ Controls.SplitView {
 
     Flickable {
         id: flickPart
-        Layout.minimumWidth: 1/4*electrodePlacement.width
-        Layout.maximumWidth: 1/4*electrodePlacement.width
+        Layout.minimumWidth: 1/4 * window.width
+        Layout.maximumWidth: 1/4 * window.width
         contentHeight: column.height
-        contentWidth: 1/4*electrodePlacement.width
+        contentWidth: 1/4 * window.width
         boundsBehavior: Flickable.OvershootBounds
 
         Rectangle {
             id: rect
-            width: 1/4*electrodePlacement.width
+            width: 1/4 * window.width
             height: Math.max(column.height, electrodePlacement.height)
             color: "white"
 
@@ -103,146 +112,94 @@ Controls.SplitView {
                 spacing: 15
                 padding: 20
 
-                Switch {
-                    id: zoomSwitch
-                    text: qsTr("Image zoom")
-                    checked: false
-                }
-
-                Switch {
-                    id: fixButton
-                    text: qsTr("Fix positions")
-                    checked: false
-                }
-
-                ComboBox {
-                    id: comboBox
-                    model: ["indexes", "track names", "indexes + tracks"]
-                    currentIndex: 2
-                    displayText: "Display: " + currentText
-                }
-
                 Button {
                     id: statisticsButton
                     text: qsTr("Show spikes statistics")
                 }
 
-                Row {
-                    id: resetRow
-                    height: resetButton.height
-                    spacing: 5
-                    Button {
-                        id: resetButton
-                        text: qsTr("Reset electrodes")
-                    }
-                    Button {
-                        id: resetZoomButton
-                        text: qsTr("Reset zoom")
-                    }
-                }
-
-                Item{
-                    id: percentageGradLabels
-                    height: 12
-                    width: 230
-                    Label {
-                        x:18
-                        text: "0"
-                    }
-                    Label {
-                        x: 35
-                        text: "0.1"
-                    }
-                    Label {
-                        x:75
-                        text: "0.3"
-                    }
-                    Label {
-                        x: 115
-                        text: "0.5"
-                    }
-                    Label {
-                        x: 155
-                        text: "0.7"
-                    }
-                    Label {
-                        x: 195
-                        text: "0.9"
-                    }
-                    Label {
-                        x:218
-                        text: "1"
-                    }
-                }
-
                 Item {
-                    id: gradient
+                    id: gradientItem
                     height: 20
                     width: 250
-                    Label {
-                        x: 0
-                        text: qsTr("min")
-                    }
                     Rectangle {
                         width: 20
-                        height: 200
-                        x: 111
-                        y: -90
+                        height: 250
+                        x: 115
+                        y: -110
                         clip: true
                         rotation: -90
                         gradient: Gradient {
-                            GradientStop { position: 0.0; color: "indigo" }
-                            GradientStop { position: 0.2; color: "blue"}
-                            GradientStop { position: 0.4; color: "green"}
-                            GradientStop { position: 0.6; color: "yellow"}
-                            GradientStop { position: 0.8; color: "orange"}
-                            GradientStop { position: 1.0; color: "red" }
+                            id: gradient
+                            GradientStop { position: 0.1 }
+                            GradientStop { position: 0.3 }
+                            GradientStop { position: 0.5 }
+                            GradientStop { position: 0.7 }
+                            GradientStop { position: 0.9 }
                         }
+
                         MouseArea  {
                             id: gradientMouse
                             anchors.fill: parent
+
+                            ColorGradientSettingDialog {
+                                id: colorDialog
+                                visible: false
+                            }
                         }
-
-                    }
-
-                    Label {
-                        x: 223
-                        text: qsTr("max")
                     }
                 }
 
-                Item{
+                Row{
                     id: gradientLabels
-                    height: 20
-                    width: 200
-                    Label {
-                        x:18
-                        text: minSpikes
+                    width: 260
+                    spacing: 10
+
+                    Repeater {
+                        model: [customMinSpikes,
+                            0.25*(customMaxSpikes - customMinSpikes) + customMinSpikes,
+                            0.5 * (customMaxSpikes - customMinSpikes) + customMinSpikes,
+                            0.75 * (customMaxSpikes - customMinSpikes) + customMinSpikes,
+                            customMaxSpikes]
+                        Label {
+                            text: Math.round(modelData)
+                            width: 44
+                            fontSizeMode: Text.Fit
+                            horizontalAlignment:Text.AlignHCenter
+                            minimumPixelSize: 10
+                            font.pixelSize: 20
+                        }
                     }
-                    Label {
-                        x: 35
-                        text: Math.round(0.1*(maxSpikes - minSpikes))
-                    }
-                    Label {
-                        x:75
-                        text: Math.round(0.3*(maxSpikes - minSpikes))
-                    }
-                    Label {
-                        x: 115
-                        text: Math.round(0.5*(maxSpikes - minSpikes))
-                    }
-                    Label {
-                        x: 155
-                        text: Math.round(0.7*(maxSpikes - minSpikes))
-                    }
-                    Label {
-                        x: 195
-                        text: Math.round(0.9*(maxSpikes - minSpikes))
-                    }
-                    Label {
-                        x:218
-                        text: maxSpikes
-                    }
+
+
+                }
+
+                Switch {
+                    id: zoomSwitch
+                    text: qsTr("Enable zoom")
+                    checked: false
+                }
+
+                Switch {
+                    id: fixButton
+                    text: qsTr("Fix electrodes")
+                    checked: false
+                }
+
+                Button {
+                    id: resetButton
+                    text: qsTr("Reset positions")
+                }
+
+                Button {
+                    id: resetZoomButton
+                    text: qsTr("Reset zoom")
+                }
+
+                ComboBox {
+                    id: comboBox
+                    model: [qsTr("indexes"), qsTr("track names"), qsTr("indexes + tracks")]
+                    currentIndex: 2
+                    displayText: qsTr("Display: ") + currentText
                 }
 
                 Repeater {
@@ -252,7 +209,6 @@ Controls.SplitView {
                     delegate: Row {
                         id: elRow
                         property alias elec: elecItem
-                        property int indexNum: index
                         padding: 5
                         spacing: 5
 
@@ -266,16 +222,9 @@ Controls.SplitView {
                             height: 40
                             font.pixelSize: 40
                             highlighted: true
-//                            background: Rectangle {
-//                                implicitWidth: 20
-//                                implicitHeight: 20
-//                                color: plusButton.down ? "#d6d6d6" : "#f6f6f6"
-//                                border.color: "black"
-//                                border.width: 1
-//                                radius: 20
-//                            }
                             anchors.verticalCenter: parent.verticalCenter
-                            onClicked: {
+                            onClicked: addNewElectrode()
+                            function addNewElectrode() {
                                 var component = Qt.createComponent("qrc:/pages/Electrode.qml")
                                 var sameElec = component.createObject(elecItem, {"columnCount": columns, "rowCount": rows, "linkList": links,
                                                                           "color": elecItem.children[elecItem.children.length-1].basicE.color,
@@ -294,7 +243,7 @@ Controls.SplitView {
                                 }
                             }
                             function getYCoordinate(index) {
-                                var temp = gradientLabels.y + gradientLabels.height + column.spacing + column.padding
+                                var temp = comboBox.y + comboBox.height + column.spacing + column.padding
                                 if (index === 0) {
                                     return temp
                                 }
@@ -315,150 +264,13 @@ Controls.SplitView {
                     }
                 }
             }
-
-            Popup {
-                id: colorGradientPopup
-                x: (window.width - width) / 2 - imageArea.width
-                y: (window.height - height) / 6
-                focus: true
-                modal: true
-
-                Column {
-                    spacing: 10
-                    Label {
-                        text: qsTr("<b>Change colors</b>")
-                    }
-                    Item{
-                        //  id: percentageGradLabels
-                        height: 12
-                        width: 230
-                        Label {
-                            x:18
-                            text: "0"
-                        }
-                        Label {
-                            x: 35
-                            text: "0.1"
-                        }
-                        Label {
-                            x:75
-                            text: "0.3"
-                        }
-                        Label {
-                            x: 115
-                            text: "0.5"
-                        }
-                        Label {
-                            x: 155
-                            text: "0.7"
-                        }
-                        Label {
-                            x: 195
-                            text: "0.9"
-                        }
-                        Label {
-                            x:218
-                            text: "1"
-                        }
-                    }
-
-                    Item {
-                        //  id: gradient
-                        height: 20
-                        width: 300
-                        Label {
-                            x: 0
-                            text: qsTr("min")
-                        }
-                        Rectangle {
-                            width: 20
-                            height: 240
-                            x: 137
-                            y: -110
-                            clip: true
-                            rotation: -90
-                            gradient: Gradient {
-                                GradientStop { position: 0.0; color: "indigo" }
-                                GradientStop { position: 0.2; color: "blue"}
-                                GradientStop { position: 0.4; color: "green"}
-                                GradientStop { position: 0.6; color: "yellow"}
-                                GradientStop { position: 0.8; color: "orange"}
-                                GradientStop { position: 1.0; color: "red" }
-                            }
-                        }
-
-                        Label {
-                            x: 273
-                            text: qsTr("max")
-                        }
-                    }
-
-                    Item{
-                        // id: gradientLabels
-                        height: 20
-                        width: 200
-                        Label {
-                            x:18
-                            text: minSpikes
-                        }
-                        Label {
-                            x: 35
-                            text: Math.round(0.1*(maxSpikes - minSpikes))
-                        }
-                        Label {
-                            x:75
-                            text: Math.round(0.3*(maxSpikes - minSpikes))
-                        }
-                        Label {
-                            x: 115
-                            text: Math.round(0.5*(maxSpikes - minSpikes))
-                        }
-                        Label {
-                            x: 155
-                            text: Math.round(0.7*(maxSpikes - minSpikes))
-                        }
-                        Label {
-                            x: 195
-                            text: Math.round(0.9*(maxSpikes - minSpikes))
-                        }
-                        Label {
-                            x:218
-                            text: maxSpikes
-                        }
-                    }
-
-                    Row {
-                        spacing: 10
-                        SpinBox {
-                            from: 0
-                            to: 9
-                        }
-                        ComboBox {
-                            model: ["yellow", "red", "orange"]
-                            currentIndex: 0
-                            displayText: "Display: " + currentText
-                        }
-                    }
-                    Row {
-                        spacing: 100
-                        Button {
-                            text: qsTr("OK")
-                        }
-                        Button {
-                            text: qsTr("Cancel")
-                            onClicked: { colorGradientPopup.close() }
-                        }
-                    }
-                }
-
-            }
         }
 
         ScrollIndicator.vertical: ScrollIndicator { id: scrollIndicator }
     }
-    onCurrIndexChanged: {
-        if (currIndex > 0) {
-            imageArea.children[currIndex].z = ++zHighest
-        }
+
+    Component.onCompleted: {
+        customMinSpikes = minSpikes
+        customMaxSpikes = maxSpikes
     }
 }

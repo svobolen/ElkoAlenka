@@ -1,14 +1,17 @@
 import QtQuick 2.7
+import QtQuick.Controls.Universal 2.1
 
 DragTrackForm {
 
     mouseArea.onReleased: {
         mouseArea.parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
+
         if (mouseArea.parent !== root) {
             mouseArea.parent.alreadyContainsDrag = true
             mouseArea.parent.name = trackName
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
+            tile.color = Universal.color(Universal.Cyan)
 
             console.log("Track " + trackName + " has been linked to position " + mouseArea.parent.defaultName
                         + " on electrode " + mouseArea.parent.rowCount + "x" + mouseArea.parent.columnCount + ".")
@@ -22,6 +25,7 @@ DragTrackForm {
             mouseArea.parent.trackName = ""
             mouseArea.parent.trackId = -1
             mouseArea.parent.spikes = 0
+            tile.color = "white"
         }
     }
     tile.states: State {

@@ -1,5 +1,5 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.0
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 
 
 Item {
@@ -7,14 +7,16 @@ Item {
     property int columnCount
     property int rowCount
     property int size: 60
-    property alias color: electrode.color
     property int indexNumber: 1
     property bool draggable: true
     property bool flickable: true
+    property int yPosition: 0
+    property ListModel linkList
+
     property alias basicE: electrode
     property alias mouseArea: mouseArea
-    property ListModel linkList
-    property int yPosition: 0
+    property alias root: root
+    property alias color: electrode.color
 
     width: columnCount*size; height: rowCount*size;
 
@@ -110,12 +112,15 @@ Item {
                                             + electrodePlacement.electrodeRep.itemAt(root.indexNumber).elec.x
                                             + electrodePlacement.column.padding
                                             - electrodePlacement.imageArea.x / electrodePlacement.imageArea.scale
-                                    electrode.y = electrode.y + root.yPosition
+
+                                    electrode.y = electrode.y + root.yPosition - electrodePlacement.column.spacing
                                             - electrodePlacement.column.height * electrodePlacement.scrollIndicator.position
                                             - electrodePlacement.imageArea.y / electrodePlacement.imageArea.scale
+
                                     electrode.scale = electrode.scale / electrodePlacement.imageArea.scale
                                     indexNumber = electrodePlacement.imageArea.children.length
                                     electrodePlacement.currIndex = indexNumber - 1
+
                                 } else if (electrode.parent == root){
                                     electrode.x = 0
                                     electrode.y = 0

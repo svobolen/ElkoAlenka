@@ -46,5 +46,8 @@
         <file>+universal/Button.qml</file>
         <file>+universal/Label.qml</file>
         <file>+universal/Switch.qml</file>
+        <file>+universal/ComboBox.qml</file>
+        <file>pages/ColorGradientSettingDialog.qml</file>
+        <file>pages/ColorGradientSettingDialogForm.qml</file>
     </qresource>
 </RCC>

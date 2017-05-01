@@ -1,7 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Controls
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 
 Controls.SplitView {
     id: electrodeSignalLink

@@ -1,9 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.1
-import QtQuick.Dialogs 1.2
+import QtQuick.Dialogs 1.2 as Dialogs
 import QtQuick.Controls.Universal 2.1
-import QtQuick.Window 2.2
 import "./pages" as Pages
 import "./+universal"
 
@@ -19,7 +18,7 @@ Page {
     Universal.accent: Universal.Cyan
 
     property var images
-    property string file: "file:///" + filePath + ".mont"
+    property string file: filePath
     property alias confirmButton: confirmButton
 
     header: ToolBar {
@@ -83,19 +82,33 @@ Page {
                 Menu {
                     id: optionsMenu
                     x: parent.width - width
+                    width: window.width / 4
                     font.pixelSize: 30
                     transformOrigin: Menu.TopRight
 
                     MenuItem {
+                        width: parent.width
+                        height: 75
+                    }
+                    MenuItem {
                         text: qsTr("Save session...")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
                         onTriggered: saveDialog.open()
                     }
                     MenuItem {
                         text: qsTr("Open session...")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
                         onTriggered: openDialog.open()
                     }
                     MenuItem {
                         text: qsTr("About")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
                         onTriggered: aboutDialog.open()
                     }
                 }
@@ -108,29 +121,37 @@ Page {
         background: Rectangle {
             implicitHeight: 100
             color: "white"
-
-            Rectangle {
-                width: parent.width
-                height: 2
-                anchors.bottom: parent.bottom
-                color: "transparent"
-                border.color: "skyblue"
-            }
         }
 
         RowLayout {
             anchors.fill: parent
-            ToolButton {
-                id: backButton
-                text: qsTr("< Back")
-                font.pixelSize: 40
-                implicitWidth: 200
-                implicitHeight: parent.height
-                anchors.left: parent.left
-                onClicked: {
-                    stackView.pop()
-                    titleLabel.text = stackView.currentItem.name
+            spacing: 100
+//            ToolButton {
+//                id: backButton
+//                text: qsTr("< Back")
+//                font.pixelSize: 40
+//                implicitWidth: 200
+//                implicitHeight: parent.height
+//                anchors.left: parent.left
+//                onClicked: {
+//                    stackView.pop()
+//                    titleLabel.text = stackView.currentItem.name
+//                }
+//            }
+            PageIndicator {
+                id: pageIndicator
+                count: listView.count
+                currentIndex: listView.currentIndex
+                anchors {horizontalCenter: parent.horizontalCenter; verticalCenter: parent.verticalCenter}
+                spacing: 15
+                delegate: Rectangle {
+                    implicitWidth: 30
+                    implicitHeight: 10
+
+                    radius: width / 2
+                    color: index === pageIndicator.currentIndex ? Universal.color(Universal.Cyan)  : pageIndicator.Universal.baseLowColor
                 }
+
             }
             ToolButton {
                 id: confirmButton
@@ -139,6 +160,7 @@ Page {
                 implicitWidth: 200
                 implicitHeight: parent.height
                 anchors.right: parent.right
+                highlighted: true
                 onClicked: stackView.currentItem.confirm()
             }
         }
@@ -157,9 +179,11 @@ Page {
             delegate: ItemDelegate {
                 id: control
                 width: parent.width
+                height: 120
                 text: model.title
-                font.pixelSize: 40
+                font.pixelSize: 30
                 highlighted: ListView.isCurrentItem
+                Universal.accent: Universal.Cyan
 
                 onClicked: {
                     changePage(model.title, model.source, index)
@@ -171,11 +195,22 @@ Page {
 
             ListModel {
                 id: pageModel
-                ListElement { title: "Welcome page"; source: "" }
-                ListElement { title: "Image Manager"; source: "qrc:/pages/ImageManager.qml" }
-                ListElement { title: "Electrode Manager"; source: "qrc:/pages/ElectrodeManager.qml" }
-                ListElement { title: "Link Signal with Electrode"; source: "qrc:/pages/ElectrodeSignalLink.qml"}
-                ListElement { title: "Electrode Placement"; source: "qrc:/pages/ElectrodePlacement.qml" }
+                ListElement { title: qsTr("Welcome page"); source: "" }
+                ListElement { title: qsTr("Image Manager"); source: "qrc:/pages/ImageManager.qml" }
+                ListElement { title: qsTr("Electrode Manager"); source: "qrc:/pages/ElectrodeManager.qml" }
+                ListElement { title: qsTr("Link Signal with Electrode"); source: "qrc:/pages/ElectrodeSignalLink.qml"}
+                ListElement { title: qsTr("Electrode Placement"); source: "qrc:/pages/ElectrodePlacement.qml" }
+            }
+            onCurrentIndexChanged: {
+                if (currentIndex == 4) {
+                    confirmButton.text = qsTr("Export image")
+                    confirmButton.width = 300
+                    confirmButton.highlighted = false
+                } else if (confirmButton.text !== qsTr("Next >")){
+                    confirmButton.text = qsTr("Next >")
+                    confirmButton.width = 200
+                    confirmButton.highlighted = true
+                }
             }
         }
     }
@@ -186,7 +221,7 @@ Page {
 
         initialItem: Pane {
             id: pane
-            property string name: "Welcome page"
+            property string name: qsTr("Welcome page")
             Image {
                 source: "qrc:/images/Doctor_Hibbert.png"
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -219,17 +254,18 @@ Page {
             }
         }
 
-        onDepthChanged: {
-            backButton.enabled = (depth > 1)
-        }
+//        onDepthChanged: {
+//            backButton.enabled = (depth > 1)
+//        }
     }
 
-    Popup {
+    Dialog {
         id: aboutDialog
         modal: true
         focus: true
         x: (window.width - width) / 2
         y: window.height / 6
+        standardButtons: Dialog.Ok
 
         Column {
             id: aboutColumn
@@ -240,45 +276,40 @@ Page {
                 font.bold: true
             }
             Label {
-                text: "Author:   Lenka Svobodová "
+                text: qsTr("Author:   Lenka Svobodová ")
             }
             Label {
-                text: "E-mail:   svobole5@fel.cvut.cz "
+                text: qsTr("E-mail:   svobole5@fel.cvut.cz ")
             }
             Label {
-                text: "Year:     2017"
-            }
-            Button {
-                id: okButton
-                text: "Ok"
-                onClicked: aboutDialog.close()
+                text: qsTr("Year:     2017")
             }
         }
     }
 
-    FileDialog {
+    Dialogs.FileDialog {
         id: saveDialog
         folder: shortcuts.documents
         selectExisting: false
-        nameFilters: [ "All files (*)" ]
+        nameFilters: [ qsTr("All files (*)") ]
         onAccepted: {
 
         }
         onRejected: console.log("Saving file canceled.")
     }
 
-    FileDialog {
+    Dialogs.FileDialog {
         id: openDialog
 
         property ListModel electrodeList: ListModel {}
 
-        nameFilters: [ "", "All files (*)" ]
+        nameFilters: [ "", qsTr("All files (*)") ]
         folder: shortcuts.documents
         onAccepted: {
             var path = openDialog.fileUrl
             openSessionPage.sourcePath = "qrc:/xmls/session.xml"
             listView.currentIndex = 3   //index v listview
-            titleLabel.text = "Electrode Placement"
+            titleLabel.text = qsTr("Electrode Placement")
 
             var sourceArray = []
             for (var k = 0; k < openSessionPage.imageModel.count; k++) {
@@ -292,7 +323,7 @@ Page {
             }
 
             stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": electrodeList, "images": sourceArray,
-                               "name": "Electrode Placement", "minSpikes": 0, "maxSpikes": 97} )
+                               "name": qsTr("Electrode Placement"), "minSpikes": 0, "maxSpikes": 97} )
         }
         onRejected: console.log("Choosing file canceled.")
     }
@@ -313,7 +344,7 @@ Page {
                 stackView.push(source, {"name": title})
 
             } else {
-                if (title === "Welcome page") {
+                if (title === qsTr("Welcome page")) {
                     stackView.push(stackView.initialItem)
                 } else {
                     stackView.push(stackItem)

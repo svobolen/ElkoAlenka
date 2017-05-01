@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 
 
 
@@ -21,6 +21,6 @@ ImageManagerForm {
         var checkedImages = getCheckedImages()
         console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
         window.images = checkedImages
-        window.changePage("Electrode Manager", "qrc:/pages/ElectrodeManager.qml", 2)
+        window.changePage(qsTr("Electrode Manager"), "qrc:/pages/ElectrodeManager.qml", 2)
     }
 }

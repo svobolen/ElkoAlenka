@@ -1,6 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import "../+universal"
 
 Page {
@@ -64,7 +64,6 @@ Page {
                         }
                         Label {
                             text: strip.rowCount + "x" + strip.columnCount
-                            font.pixelSize: 20
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         BasicElectrode {
@@ -78,7 +77,7 @@ Page {
             }
 
             ScrollIndicator.vertical: ScrollIndicator { }
-            ScrollIndicator.horizontal: ScrollIndicator { }
+            ScrollIndicator.horizontal: ScrollIndicator { bottomPadding: 49}
         }
 
         Flickable {
@@ -116,7 +115,6 @@ Page {
                         }
                         Label {
                             text: grid.rowCount + "x" + grid.columnCount
-                            font.pixelSize: 20
                             anchors.verticalCenter: parent.verticalCenter
                         }
                         BasicElectrode {
@@ -130,7 +128,7 @@ Page {
             }
 
             ScrollIndicator.vertical: ScrollIndicator { }
-            ScrollIndicator.horizontal: ScrollIndicator { }
+            ScrollIndicator.horizontal: ScrollIndicator { bottomPadding: 49 }
         }
     }
 
@@ -141,6 +139,7 @@ Page {
         anchors.right: parent.right
         anchors.margins: 50
         highlighted: true
+        height: 60
     }
 
     Button {
@@ -150,27 +149,20 @@ Page {
         anchors.right: parent.right
         anchors.margins: 50
         highlighted: true
+        height: 60
     }
 
-    Popup {
+    Dialog {
         id: infoPopup
         modal: true
         focus: true
         x: (window.width - width) / 2
         y: (window.height - height) / 6
-        Column{
-            spacing: 10
-            Label {
-                text: qsTr("<b>Information</b>")
-            }
-            Label {
-                text: qsTr("You didn't choose any electrode.")
-            }
-            Button {
-                text: qsTr("OK")
-                width: 150
-                onClicked: { infoPopup.close() }
-            }
+        title: qsTr("<b>Information</b>")
+        standardButtons: Dialog.Ok
+
+        Label {
+            text: qsTr("You didn't choose any electrode.")
         }
     }
 
