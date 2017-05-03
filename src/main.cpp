@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 #endif
 
 		SignalFileBrowserWindow window;
-		window.showFullScreen();
+		window.showMaximized();
 
 		ret = app.exec();
 	}

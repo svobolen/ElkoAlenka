@@ -47,7 +47,7 @@ Item {
             Grid {
                 id: colorGrid
                 spacing: 10
-                columns: 5
+                columns: 7
                 Repeater {
                     model: [Universal.color(Universal.Lime), Universal.color(Universal.Green),
                         Universal.color(Universal.Emerald), Universal.color(Universal.Teal),

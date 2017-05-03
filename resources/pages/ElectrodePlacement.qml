@@ -22,6 +22,7 @@ ElectrodePlacementForm {
                 electrodeI.basicE.y = 0
                 electrodeI.basicE.scale = 1
                 electrodeI.basicE.rotation = 0
+                electrodeI.root.indexNumber = 1
             }
         }
     }

@@ -10,11 +10,9 @@ Controls.SplitView {
     property var electrodes
     property int maxSpikes: 0
     property int minSpikes: 0
-    property string path: window.file
 
     property alias elecRep: elecRep
     property alias dragRep: dragRep
-    property alias xmlModels: xmlModels
 
     Flickable {
         contentHeight:source.height + 150
@@ -35,17 +33,12 @@ Controls.SplitView {
                 padding: 30
                 Repeater {
                     id: dragRep
-                    model: xmlModels.trackModel
+                    model: window.xmlModels.trackModel
                     DragTrack {
                         trackName: label.replace(/\s+/g, '') //without whitespaces
                         trackId: index
                     }
                 }
-            }
-
-            XmlModels {
-                id: xmlModels
-                sourcePath: path
             }
         }
         ScrollIndicator.vertical: ScrollIndicator { }
@@ -88,4 +81,5 @@ Controls.SplitView {
         ScrollIndicator.vertical: ScrollIndicator { }
         ScrollIndicator.horizontal: ScrollIndicator { }
     }
+
 }

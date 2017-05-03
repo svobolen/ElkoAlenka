@@ -544,6 +544,7 @@ SignalFileBrowserWindow::SignalFileBrowserWindow(QWidget* parent) : QMainWindow(
 	windowMenu->addAction(zoomToolBar->toggleViewAction());
 	windowMenu->addAction(keyboardToolBar->toggleViewAction());
 	windowMenu->addAction(spikedetToolBar->toggleViewAction());
+	windowMenu->addAction(switchToolBar->toggleViewAction());
 
 	// Construct Tools menu.
 	QMenu* toolsMenu = menuBar()->addMenu("&Tools");

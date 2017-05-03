@@ -4,7 +4,11 @@ import QtQuick.Dialogs 1.2
 BrainForm {    
     mouseArea.onClicked: {
         if (brainImage.source == plusImgSource) {
+            if (loader.sourceComponent === fileComp) {
+                loader.sourceComponent = undefined
+            }
             loader.sourceComponent = fileComp
+
         } else {
             checkbox.checked = !checkbox.checked
         }
@@ -14,7 +18,18 @@ BrainForm {
         menu.open()
     }
 
+    mouseArea.onPressed: {
+        for(var i = 0; i < 4; i++) {
+            if (brainImage.parent.children[i].loader.sourceComponent !== undefined) {
+                brainImage.parent.children[i].loader.sourceComponent = undefined
+            }
+        }
+    }
+
     changeMenu.onTriggered: {
+        if (loader.sourceComponent === fileComp) {
+            loader.sourceComponent = undefined
+        }
         loader.sourceComponent = fileComp
     }
 
@@ -75,6 +90,7 @@ BrainForm {
 
     Component {
         id: fileComp
+
         FileDialog {
             id: fileDialog
             nameFilters: [ "Image files (*.jpg *.png *.bmp)", "All files (*)" ]
@@ -106,9 +122,14 @@ BrainForm {
                 loader.sourceComponent = undefined
                 console.log("Choosing file canceled.")
             }
-            Component.onCompleted: open()
+            Component.onCompleted: { open() }
         }
     }
 
-    Loader {id: loader }
+    Loader {
+        id: loader
+    }
+
+    property alias loader: loader
+
 }

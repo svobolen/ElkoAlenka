@@ -20,6 +20,7 @@ Page {
     property var images
     property string file: filePath
     property alias confirmButton: confirmButton
+    property alias xmlModels: xmlModels
 
     header: ToolBar {
         height: 100
@@ -332,6 +333,11 @@ Page {
         id: openSessionPage
     }
 
+    Pages.XmlModels {
+        id: xmlModels
+        sourcePath: file
+    }
+
     function changePage(title, source, indexNum) {
         if (listView.currentIndex !== indexNum) {
 
@@ -352,5 +358,4 @@ Page {
             }
         }
     }
-
 }

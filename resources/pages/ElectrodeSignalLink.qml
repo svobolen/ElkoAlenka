@@ -28,11 +28,11 @@ ElectrodeSignalLinkForm {
         var min = 0
         var max = 0
 
-        for (var i = 0; i < xmlModels.trackModel.count; i++) {
+        for (var i = 0; i < window.xmlModels.trackModel.count; i++) {
             spikes = 0
             dragRep.itemAt(i).spikes = 0    //////////////
-            for (var j = 0; j < xmlModels.eventModel.count; j++) {
-                if (i == xmlModels.eventModel.get(j).channel) {
+            for (var j = 0; j < window.xmlModels.eventModel.count; j++) {
+                if (i == window.xmlModels.eventModel.get(j).channel) {
                     spikes++
                 }
             }
