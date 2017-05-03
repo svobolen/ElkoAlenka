@@ -129,7 +129,7 @@ Item {
                                 } //else nothing (just moving with mouse)
                         }
                     }
-                    onPressAndHold: {
+                    onDoubleClicked: {
                         menu.open()
                     }
 

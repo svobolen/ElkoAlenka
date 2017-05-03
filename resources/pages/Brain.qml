@@ -11,10 +11,11 @@ BrainForm {
 
         } else {
             checkbox.checked = !checkbox.checked
+            menu.visible = false
         }
     }
 
-    mouseArea.onPressAndHold: {
+    mouseArea.onDoubleClicked: {
         menu.open()
     }
 
