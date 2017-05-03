@@ -23,4 +23,12 @@ ImageManagerForm {
         window.images = checkedImages
         window.changePage(qsTr("Electrode Manager"), "qrc:/pages/ElectrodeManager.qml", 2)
     }
+
+    function reset() {
+        for (var k = 0; k < swipe.count; k++) {
+            for (var i = 0; i < swipe.itemAt(k).images.count; i++) {
+                swipe.itemAt(k).images.itemAt(i).checkbox.checked = false
+            }
+        }
+    }
 }

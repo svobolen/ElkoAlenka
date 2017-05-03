@@ -20,6 +20,7 @@ Page {
     property var images
     property string file: filePath
     property alias confirmButton: confirmButton
+    property alias resetButton: resetButton
     property alias xmlModels: xmlModels
 
     header: ToolBar {
@@ -127,18 +128,17 @@ Page {
         RowLayout {
             anchors.fill: parent
             spacing: 100
-//            ToolButton {
-//                id: backButton
-//                text: qsTr("< Back")
-//                font.pixelSize: 40
-//                implicitWidth: 200
-//                implicitHeight: parent.height
-//                anchors.left: parent.left
-//                onClicked: {
-//                    stackView.pop()
-//                    titleLabel.text = stackView.currentItem.name
-//                }
-//            }
+            ToolButton {
+                id: resetButton
+                text: qsTr("X Clean")
+                font.pixelSize: 40
+                implicitWidth: 200
+                implicitHeight: parent.height
+                anchors.left: parent.left
+                onClicked: {
+                    stackView.currentItem.reset()
+                }
+            }
             PageIndicator {
                 id: pageIndicator
                 count: listView.count
@@ -246,6 +246,9 @@ Page {
 
             function confirm() {
                 changePage("Image Manager", "qrc:/pages/ImageManager.qml", 1)
+            }
+
+            function reset() { // do nothing
             }
         }
 

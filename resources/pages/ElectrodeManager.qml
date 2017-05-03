@@ -3,6 +3,10 @@ import QtQuick.Controls 2.1
 
 ElectrodeManagerForm {
 
+    addButton.onClicked: {
+        addDialog.open()
+    }
+
     function confirm() {
         var chosenElecs = getChosenElectrodes()
         if (chosenElecs.count === 0) {
@@ -15,11 +19,7 @@ ElectrodeManagerForm {
         }
     }
 
-    addButton.onClicked: {
-        addDialog.open()
-    }
-
-    resetButton.onClicked: {
+    function reset() {
         // reset strips choice
         for (var i = 0; i < stripRepeater.count; i++) {
             stripRepeater.itemAt(i).count = 0

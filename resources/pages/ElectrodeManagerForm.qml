@@ -6,7 +6,7 @@ import "../+universal"
 Page {
     id: item
     property var name
-    property alias resetButton: resetButton
+//    property alias resetButton: resetButton
     property alias addButton: addButton
     property alias stripRepeater: stripRep
     property alias gridRepeater: gridRep
@@ -142,15 +142,15 @@ Page {
         height: 60
     }
 
-    Button {
-        id: resetButton
-        text: qsTr("Reset choice")
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.margins: 50
-        highlighted: true
-        height: 60
-    }
+//    Button {
+//        id: resetButton
+//        text: qsTr("Reset choice")
+//        anchors.bottom: parent.bottom
+//        anchors.right: parent.right
+//        anchors.margins: 50
+//        highlighted: true
+//        height: 60
+//    }
 
     Dialog {
         id: infoPopup

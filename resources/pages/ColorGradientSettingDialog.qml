@@ -9,15 +9,28 @@ ColorGradientSettingDialogForm {
                                               gradient.stops[4].color)
         electrodePlacement.customMinSpikes = Math.round(rangeSlider.first.value)
         electrodePlacement.customMaxSpikes = Math.round(rangeSlider.second.value)
-        window.confirmButton.text = qsTr("Export image")
+        setFooterButtons()
         stackView.pop()
+        window.confirmButton.width = 300
     }
 
     cancelButton.onClicked: {
         for(var i = 0; i < tileRepeater.count; i++) {
             tileRepeater.itemAt(i).mouseArea.parent = tileRepeater.itemAt(i)
         }
-        window.confirmButton.text = qsTr("Export image")
+        setColors(electrodePlacement.gradient.stops[0].color, electrodePlacement.gradient.stops[1].color, electrodePlacement.gradient.stops[2].color,
+                  electrodePlacement.gradient.stops[3].color, electrodePlacement.gradient.stops[4].color)
+        setFooterButtons()
+        stackView.pop()
+    }
+
+    backButton.onClicked: {
+        for(var i = 0; i < tileRepeater.count; i++) {
+            tileRepeater.itemAt(i).mouseArea.parent = tileRepeater.itemAt(i)
+        }
+        setColors(electrodePlacement.gradient.stops[0].color, electrodePlacement.gradient.stops[1].color, electrodePlacement.gradient.stops[2].color,
+                  electrodePlacement.gradient.stops[3].color, electrodePlacement.gradient.stops[4].color)
+        setFooterButtons()
         stackView.pop()
     }
 
@@ -35,6 +48,14 @@ ColorGradientSettingDialogForm {
         setColors(Universal.color(Universal.Cobalt), Universal.color(Universal.Green),
                   Universal.color(Universal.Yellow), Universal.color(Universal.Orange),
                   Universal.color(Universal.Red))
+    }
+
+    function setFooterButtons() {
+        window.confirmButton.enabled = true
+        window.confirmButton.text = "Export image"
+        window.resetButton.enabled = true
+        window.resetButton.text = "X Clean"
+        window.confirmButton.highlighted = false
     }
 
 }

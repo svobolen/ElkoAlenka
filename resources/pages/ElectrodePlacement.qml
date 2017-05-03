@@ -11,7 +11,7 @@ ElectrodePlacementForm {
         imageArea.y = 0;
     }
 
-    resetButton.onClicked: {
+    function reset() {
         var electrodeI;
         for (var i = 0; i < electrodeRep.count; i++) {
             for (var j = 0; j < electrodeRep.itemAt(i).elec.children.length; j++) {
@@ -25,6 +25,9 @@ ElectrodePlacementForm {
                 electrodeI.root.indexNumber = 1
             }
         }
+        imageArea.scale = 1;
+        imageArea.x = 0;
+        imageArea.y = 0;
     }
 
     statisticsButton.onClicked: {
@@ -74,7 +77,10 @@ ElectrodePlacementForm {
     }
 
     gradientMouse.onPressed: {
+        window.confirmButton.enabled = false
         window.confirmButton.text = ""
+        window.resetButton.enabled = false
+        window.resetButton.text = ""
         stackView.push(colorDialog, {})
     }
 
@@ -112,6 +118,8 @@ ElectrodePlacementForm {
         setColors(Universal.color(Universal.Cobalt), Universal.color(Universal.Green),
                   Universal.color(Universal.Yellow), Universal.color(Universal.Orange),
                   Universal.color(Universal.Red))
+        customMinSpikes = minSpikes
+        customMaxSpikes = maxSpikes
     }
 
     function changeNames(comboBoxValue) {

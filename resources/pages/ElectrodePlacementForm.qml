@@ -11,7 +11,7 @@ Controls.SplitView {
     property alias zoomSwitch: zoomSwitch
     property alias fixButton: fixButton
     property alias resetZoomButton: resetZoomButton
-    property alias resetButton: resetButton
+//    property alias resetButton: resetButton
     property alias comboBox: comboBox
     property alias electrodeRep: electrodeRep
     property alias electrodePlacement: electrodePlacement
@@ -185,10 +185,10 @@ Controls.SplitView {
                     checked: false
                 }
 
-                Button {
-                    id: resetButton
-                    text: qsTr("Reset positions")
-                }
+//                Button {
+//                    id: resetButton
+//                    text: qsTr("Reset positions")
+//                }
 
                 Button {
                     id: resetZoomButton
@@ -267,10 +267,5 @@ Controls.SplitView {
         }
 
         ScrollIndicator.vertical: ScrollIndicator { id: scrollIndicator }
-    }
-
-    Component.onCompleted: {
-        customMinSpikes = minSpikes
-        customMaxSpikes = maxSpikes
     }
 }

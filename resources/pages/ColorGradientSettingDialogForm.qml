@@ -10,6 +10,7 @@ Item {
 
     property alias applyButton: applyButton
     property alias cancelButton: cancelButton
+    property alias backButton: backButton
     property alias tileRepeater: tileRepeater
     property alias rangeSlider: rangeSlider
     property alias gradient: gradient
@@ -17,6 +18,16 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: "lightgrey"
+    }
+
+    Button {
+        id: backButton
+        x: 10
+        y: 10
+        text: "<- Back"
+        width: 200
+        height: 50
+        font.pixelSize: 30
     }
 
     Rectangle {
@@ -203,7 +214,7 @@ Item {
                     to: electrodePlacement.maxSpikes
                     first.value: electrodePlacement.minSpikes
                     second.value: electrodePlacement.maxSpikes
-                    width: 260
+                    width: colorGrid.width - 100
                 }
 
                 Label {
