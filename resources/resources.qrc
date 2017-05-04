@@ -1,19 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>color.frag</file>
-        <file>event.vert</file>
-        <file>montageHeader.cl</file>
-        <file>rectangleLine.vert</file>
-        <file>signal.vert</file>
-        <file>icons/edit.png</file>
-        <file>icons/fit.png</file>
-        <file>icons/zoom-in.png</file>
-        <file>icons/play.png</file>
-        <file>icons/settings.png</file>
-        <file>icons/zoom_in_horizontal.png</file>
-        <file>icons/zoom_in_vertical.png</file>
-        <file>icons/zoom_out_horizontal.png</file>
-        <file>icons/zoom_out_vertical.png</file>
         <file>images/brains/brain2.jpg</file>
         <file>images/brains/brain1.png</file>
         <file>images/brains/brain3.png</file>
