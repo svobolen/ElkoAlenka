@@ -69,7 +69,8 @@ Item {
                         Universal.color(Universal.Orange), Universal.color(Universal.Amber),
                         Universal.color(Universal.Yellow), Universal.color(Universal.Brown),
                         Universal.color(Universal.Olive), Universal.color(Universal.Steel),
-                        Universal.color(Universal.Mauve), Universal.color(Universal.Taupe)]
+                        Universal.color(Universal.Mauve), Universal.color(Universal.Taupe),
+                        "white"]
                     DropArea {
                         id: dragTarget
                         property alias dropProxy: dragTarget
@@ -144,7 +145,7 @@ Item {
             }
 
             Row {
-                spacing: 10
+                spacing: 20
 
                 Repeater {
                     id: tileRepeater
@@ -222,8 +223,33 @@ Item {
                 }
             }
 
-            Label {
-                text: "From " + Math.round(rangeSlider.first.value) + " to " + Math.round(rangeSlider.second.value)
+            Row {
+
+                spacing: 10
+
+                Label {
+                    text: "From"
+                }
+
+                SpinBox {
+                    id: minSpinBox
+                    value: Math.round(rangeSlider.first.value)
+                    from: minSpikes
+                    to: rangeSlider.second.value
+                    onValueChanged: { if (up.pressed || down.pressed) rangeSlider.setValues(value, rangeSlider.second.value) }
+                }
+
+                Label {
+                    text: "to"
+                }
+
+                SpinBox {
+                    id: maxSpinBox
+                    value: Math.round(rangeSlider.second.value)
+                    from: rangeSlider.first.value
+                    to: maxSpikes
+                    onValueChanged: { if (up.pressed || down.pressed) rangeSlider.setValues(rangeSlider.first.value, value) }
+                }
             }
 
             Row {
@@ -231,12 +257,12 @@ Item {
                 Button {
                     id: cancelButton
                     text: qsTr("Cancel")
-                    width: 160
+                    width: 230
                 }
                 Button {
                     id: applyButton
                     text: qsTr("Apply")
-                    width: 160
+                    width: 230
                 }
             }
         }

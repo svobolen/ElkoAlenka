@@ -34,7 +34,7 @@ DragTrackForm {
             target: tile
             parent: root
         }
-        //aby se to pohybovalo s mysi
+        //for moving with mouse
         AnchorChanges {
             target: tile
             anchors.verticalCenter: undefined

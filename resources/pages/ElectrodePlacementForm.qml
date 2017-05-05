@@ -21,6 +21,7 @@ Controls.SplitView {
     property alias imageArea: imageArea
     property alias gradientMouse: gradientMouse
     property alias gradient: gradient
+    property alias gradientParent: gradientParent
     property alias colorDialog: colorDialog
 
     property var name
@@ -122,12 +123,16 @@ Controls.SplitView {
                     height: 20
                     width: 250
                     Rectangle {
+                        id: gradientParent
                         width: 20
                         height: 250
                         x: 115
                         y: -110
                         clip: true
                         rotation: -90
+                        signal colorGradientChanged()
+                        onColorGradientChanged: showStatistics()
+
                         gradient: Gradient {
                             id: gradient
                             GradientStop { position: 0.1 }
@@ -135,7 +140,7 @@ Controls.SplitView {
                             GradientStop { position: 0.5 }
                             GradientStop { position: 0.7 }
                             GradientStop { position: 0.9 }
-                        }
+                        }                        
 
                         MouseArea  {
                             id: gradientMouse
@@ -164,7 +169,7 @@ Controls.SplitView {
                             text: Math.round(modelData)
                             width: 44
                             fontSizeMode: Text.Fit
-                            horizontalAlignment:Text.AlignHCenter
+                            horizontalAlignment:index === 0 ? Text.AlignLeft: index === 4 ? Text.AlignRight : Text.AlignHCenter
                             minimumPixelSize: 10
                             font.pixelSize: 20
                         }

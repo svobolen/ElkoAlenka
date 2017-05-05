@@ -5,10 +5,11 @@ ColorGradientSettingDialogForm {
 
     applyButton.onClicked: {
         electrodePlacement.setColors(gradient.stops[0].color, gradient.stops[1].color,
-                                              gradient.stops[2].color, gradient.stops[3].color,
-                                              gradient.stops[4].color)
+                                     gradient.stops[2].color, gradient.stops[3].color,
+                                     gradient.stops[4].color)
         electrodePlacement.customMinSpikes = Math.round(rangeSlider.first.value)
         electrodePlacement.customMaxSpikes = Math.round(rangeSlider.second.value)
+        electrodePlacement.gradientParent.colorGradientChanged()
         setFooterButtons()
         stackView.pop()
         window.confirmButton.width = 300

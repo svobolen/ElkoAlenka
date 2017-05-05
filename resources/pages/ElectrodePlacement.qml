@@ -11,6 +11,10 @@ ElectrodePlacementForm {
         imageArea.y = 0;
     }
 
+    statisticsButton.onClicked: {
+        showStatistics()
+    }
+
     function reset() {
         var electrodeI;
         for (var i = 0; i < electrodeRep.count; i++) {
@@ -30,11 +34,13 @@ ElectrodePlacementForm {
         imageArea.y = 0;
     }
 
-    statisticsButton.onClicked: {
+    function showStatistics() {
         var i   = 0.2 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var ii  = 0.4 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var iii = 0.6 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var iv  = 0.8 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
+
+        console.log(customMinSpikes, customMaxSpikes)
         var electrodeColor;
         var currElec;
         var currElecSpikes;
@@ -53,21 +59,29 @@ ElectrodePlacementForm {
 
                             currElecSpikes = currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes
 
-                            if ( currElecSpikes < i && currElecSpikes >= customMinSpikes) {
+
+                            if (currElecSpikes < customMinSpikes) {
+                                electrodeColor = "white"
+
+                            } else if ( currElecSpikes <= i ) {
                                 electrodeColor = gradient.stops[0].color;
 
-                            } else if (currElecSpikes < ii) {
+                            } else if (currElecSpikes <= ii) {
                                 electrodeColor = gradient.stops[1].color;
 
-                            } else if (currElecSpikes < iii) {
+                            } else if (currElecSpikes <= iii) {
                                 electrodeColor = gradient.stops[2].color;
 
-                            } else if (currElecSpikes < iv) {
+                            } else if (currElecSpikes <= iv) {
                                 electrodeColor = gradient.stops[3].color;
 
-                            } else if (currElecSpikes >= iv && currElecSpikes <= customMaxSpikes) {
+                            } else if (currElecSpikes <= customMaxSpikes) {
                                 electrodeColor = gradient.stops[4].color;
+
+                            } else {
+                                electrodeColor = "white";
                             }
+
                             currElec.rowRep.itemAt(k).colRep.itemAt(l).colorFill = electrodeColor;
                         }
                     }
