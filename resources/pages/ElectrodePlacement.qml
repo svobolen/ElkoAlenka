@@ -12,7 +12,10 @@ ElectrodePlacementForm {
     }
 
     statisticsButton.onClicked: {
-        showStatistics()
+        if (statisticsButton.highlighted)
+            hideStatistics()
+        else
+            showStatistics()
     }
 
     function reset() {
@@ -39,11 +42,10 @@ ElectrodePlacementForm {
         var ii  = 0.4 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var iii = 0.6 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var iv  = 0.8 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
-
-        console.log(customMinSpikes, customMaxSpikes)
         var electrodeColor;
         var currElec;
         var currElecSpikes;
+
         for (var m = 0; m < electrodeRep.count; m++) {
 
             for (var j = 0; j < electrodeRep.itemAt(m).elec.children.length; j++) {
@@ -88,6 +90,31 @@ ElectrodePlacementForm {
                 }
             }
         }
+
+        statisticsButton.text = "Hide statistics"
+        statisticsButton.highlighted = true
+    }
+
+    function hideStatistics() {
+        var currElec;
+
+        for (var m = 0; m < electrodeRep.count; m++) {
+
+            for (var j = 0; j < electrodeRep.itemAt(m).elec.children.length; j++) {
+                currElec = electrodeRep.itemAt(m).elec.children[j].basicE;
+
+                for (var k = 0; k < currElec.rowCount; k++) {
+
+                    for (var l = 0; l < currElec.columnCount; l++) {
+
+                        currElec.rowRep.itemAt(k).colRep.itemAt(l).colorFill = "white";
+                    }
+                }
+            }
+        }
+
+        statisticsButton.text = "Show statistics"
+        statisticsButton.highlighted = false
     }
 
     gradientMouse.onPressed: {
