@@ -17,6 +17,8 @@ Page {
     Universal.theme: Universal.Light
     Universal.accent: Universal.Cyan
 
+    signal switchToAlenka()
+
     property var images
     property string file: filePath
     property alias confirmButton: confirmButton
@@ -187,8 +189,13 @@ Page {
                 Universal.accent: Universal.Cyan
 
                 onClicked: {
-                    changePage(model.title, model.source, index)
-                    drawer.close()
+                    if (model.switchElement === true) {
+                        window.switchToAlenka()
+                    }
+                    else {
+                        changePage(model.title, model.source, index)
+                        drawer.close()
+                    }
                 }
             }
             model: pageModel
@@ -201,6 +208,7 @@ Page {
                 ListElement { title: qsTr("Electrode Manager"); source: "qrc:/pages/ElectrodeManager.qml" }
                 ListElement { title: qsTr("Link Signal with Electrode"); source: "qrc:/pages/ElectrodeSignalLink.qml"}
                 ListElement { title: qsTr("Electrode Placement"); source: "qrc:/pages/ElectrodePlacement.qml" }
+                ListElement { title: qsTr("Switch to Alenka"); switchElement: true }
             }
             onCurrentIndexChanged: {
                 if (currentIndex == 4) {
