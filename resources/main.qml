@@ -18,6 +18,7 @@ Page {
     Universal.accent: Universal.Cyan
 
     signal switchToAlenka()
+    signal exit()
 
     property var images
     property string file: filePath
@@ -91,8 +92,10 @@ Page {
                     transformOrigin: Menu.TopRight
 
                     MenuItem {
+                        text: qsTr("Close menu")
+                        font.pixelSize: 30
                         width: parent.width
-                        height: 75
+                        height: 100
                     }
                     MenuItem {
                         text: qsTr("Save session...")
@@ -114,6 +117,13 @@ Page {
                         width: parent.width
                         height: 100
                         onTriggered: aboutDialog.open()
+                    }
+                    MenuItem {
+                        text: qsTr("Exit")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
+                        onTriggered: window.exit()
                     }
                 }
             }
@@ -191,6 +201,7 @@ Page {
                 onClicked: {
                     if (model.switchElement === true) {
                         window.switchToAlenka()
+                        drawer.close()
                     }
                     else {
                         changePage(model.title, model.source, index)
@@ -265,10 +276,6 @@ Page {
                 duration: 0
             }
         }
-
-//        onDepthChanged: {
-//            backButton.enabled = (depth > 1)
-//        }
     }
 
     Dialog {
