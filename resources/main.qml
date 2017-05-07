@@ -148,9 +148,11 @@ Page {
                 implicitHeight: parent.height
                 anchors.left: parent.left
                 onClicked: {
-                    stackView.currentItem.reset()
+                    reallyDialog.open()
+                    //                    stackView.currentItem.reset()
                 }
             }
+
             PageIndicator {
                 id: pageIndicator
                 count: listView.count
@@ -166,6 +168,7 @@ Page {
                 }
 
             }
+
             ToolButton {
                 id: confirmButton
                 text: qsTr("Next >")
@@ -303,6 +306,21 @@ Page {
             Label {
                 text: qsTr("Year:     2017")
             }
+        }
+    }
+
+    Dialog {
+        id: reallyDialog
+        modal: true
+        focus: true
+        x: (window.width - width) / 2
+        y: window.height / 6
+        title: "<b>Are you sure?</b>"
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: stackView.currentItem.reset()
+
+        Label {
+            text: qsTr("Page will be reset to default state.")
         }
     }
 

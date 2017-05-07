@@ -5,17 +5,16 @@ import QtQuick.Controls.Universal 2.1
 
 ElectrodePlacementForm {
 
-    resetZoomButton.onClicked:   {
-        imageArea.scale = 1;
-        imageArea.x = 0;
-        imageArea.y = 0;
+    statisticsTableButton.onClicked:   {
+        showStatistics(false)
+        statisticsTable.open()
     }
 
     statisticsButton.onClicked: {
         if (statisticsButton.highlighted)
             hideStatistics()
         else
-            showStatistics()
+            showStatistics(true)
     }
 
     function reset() {
@@ -37,7 +36,7 @@ ElectrodePlacementForm {
         imageArea.y = 0;
     }
 
-    function showStatistics() {
+    function showStatistics(changeColors) {
         var i   = 0.2 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var ii  = 0.4 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
         var iii = 0.6 * (customMaxSpikes - customMinSpikes) + customMinSpikes;
@@ -45,6 +44,7 @@ ElectrodePlacementForm {
         var electrodeColor;
         var currElec;
         var currElecSpikes;
+        electrodeSpikesModel.clear()
 
         for (var m = 0; m < electrodeRep.count; m++) {
 
@@ -56,43 +56,46 @@ ElectrodePlacementForm {
                     for (var l = 0; l < currElec.columnCount; l++) {
 
                         if(currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes !== 0) {
-                            console.log("show spikes " + currElec.rowRep.itemAt(k).colRep.itemAt(l).trackName
-                                        + " " + currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes);
 
                             currElecSpikes = currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes
 
+                            if(changeColors) {
 
-                            if (currElecSpikes < customMinSpikes) {
-                                electrodeColor = "white"
+                                if (currElecSpikes < customMinSpikes) {
+                                    electrodeColor = "white"
 
-                            } else if ( currElecSpikes <= i ) {
-                                electrodeColor = gradient.stops[0].color;
+                                } else if ( currElecSpikes <= i ) {
+                                    electrodeColor = gradient.stops[0].color;
 
-                            } else if (currElecSpikes <= ii) {
-                                electrodeColor = gradient.stops[1].color;
+                                } else if (currElecSpikes <= ii) {
+                                    electrodeColor = gradient.stops[1].color;
 
-                            } else if (currElecSpikes <= iii) {
-                                electrodeColor = gradient.stops[2].color;
+                                } else if (currElecSpikes <= iii) {
+                                    electrodeColor = gradient.stops[2].color;
 
-                            } else if (currElecSpikes <= iv) {
-                                electrodeColor = gradient.stops[3].color;
+                                } else if (currElecSpikes <= iv) {
+                                    electrodeColor = gradient.stops[3].color;
 
-                            } else if (currElecSpikes <= customMaxSpikes) {
-                                electrodeColor = gradient.stops[4].color;
+                                } else if (currElecSpikes <= customMaxSpikes) {
+                                    electrodeColor = gradient.stops[4].color;
+
+                                } else {
+                                    electrodeColor = "white";
+                                }
+
+                                currElec.rowRep.itemAt(k).colRep.itemAt(l).colorFill = electrodeColor;
+                                statisticsButton.text = "Hide statistics"
+                                statisticsButton.highlighted = true
 
                             } else {
-                                electrodeColor = "white";
-                            }
 
-                            currElec.rowRep.itemAt(k).colRep.itemAt(l).colorFill = electrodeColor;
+                                electrodeSpikesModel.append({"name": currElec.rowRep.itemAt(k).colRep.itemAt(l).name, "spikes": currElecSpikes})
+                            }
                         }
                     }
                 }
             }
         }
-
-        statisticsButton.text = "Hide statistics"
-        statisticsButton.highlighted = true
     }
 
     function hideStatistics() {

@@ -12,9 +12,6 @@ DragTrackForm {
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
             tile.color = Universal.color(Universal.Cyan)
-
-            console.log("Track " + trackName + " has been linked to position " + mouseArea.parent.defaultName
-                        + " on electrode " + mouseArea.parent.rowCount + "x" + mouseArea.parent.columnCount + ".")
         }
     }
 

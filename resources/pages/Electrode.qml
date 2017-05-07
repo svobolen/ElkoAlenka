@@ -8,6 +8,7 @@ Item {
     property int rowCount
     property int size: 60
     property int indexNumber: 1
+    property int repeaterIndex
     property bool draggable: true
     property bool flickable: true
     property int yPosition: 0
@@ -82,7 +83,7 @@ Item {
                     drag.target: electrode
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
                     onPressed: {
-                        electrodePlacement.currIndex = indexNumber - 1
+                        electrodePlacement.currIndex = indexNumber
                         tempX = Math.round(electrode.x)
                         tempY = Math.round(electrode.y)
                     }
@@ -109,7 +110,7 @@ Item {
 
                                 if (previousParent == root & electrode.parent != root ) {
                                     electrode.x = electrode.x + electrode.parent.width
-                                            + electrodePlacement.electrodeRep.itemAt(root.indexNumber).elec.x
+                                            + electrodePlacement.electrodeRep.itemAt(root.repeaterIndex).elec.x
                                             + electrodePlacement.column.padding
                                             - electrodePlacement.imageArea.x / electrodePlacement.imageArea.scale
 
@@ -118,8 +119,8 @@ Item {
                                             - electrodePlacement.imageArea.y / electrodePlacement.imageArea.scale
 
                                     electrode.scale = electrode.scale / electrodePlacement.imageArea.scale
-                                    indexNumber = electrodePlacement.imageArea.children.length
-                                    electrodePlacement.currIndex = indexNumber - 1
+                                    indexNumber = electrodePlacement.imageArea.children.length - 1
+                                    electrodePlacement.currIndex = indexNumber
 
                                 } else if (electrode.parent == root){
                                     electrode.x = 0

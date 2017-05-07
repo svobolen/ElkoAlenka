@@ -10,8 +10,7 @@ Controls.SplitView {
 
     property alias zoomSwitch: zoomSwitch
     property alias fixButton: fixButton
-    property alias resetZoomButton: resetZoomButton
-//    property alias resetButton: resetButton
+    property alias statisticsTableButton: statisticsTableButton
     property alias comboBox: comboBox
     property alias electrodeRep: electrodeRep
     property alias electrodePlacement: electrodePlacement
@@ -23,6 +22,7 @@ Controls.SplitView {
     property alias gradient: gradient
     property alias gradientParent: gradientParent
     property alias colorDialog: colorDialog
+    property alias statisticsTable: statisticsTable
 
     property var name
     property int zHighest: 2
@@ -34,6 +34,7 @@ Controls.SplitView {
     property int customMinSpikes: 0
     property int customMaxSpikes: 0
     property ListModel electrodes: ListModel {}
+    property ListModel electrodeSpikesModel: ListModel {} //ListElement {name: "C3", spikes: "5"}
 
     orientation: Qt.Horizontal
     onCurrIndexChanged: {
@@ -86,10 +87,60 @@ Controls.SplitView {
                     anchors.fill: parent
                     anchors.centerIn: parent
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
-                    onWheel: {
-                        imageArea.scale += imageArea.scale * wheel.angleDelta.y / 120 / 10;
+                    onWheel: imageArea.scale += imageArea.scale * wheel.angleDelta.y / 120 / 10;
+                    onDoubleClicked: { //reset zoom
+                        imageArea.scale = 1;
+                        imageArea.x = 0;
+                        imageArea.y = 0;
                     }
                 }
+            }
+        }
+
+        Dialog {
+            id: statisticsTable
+            modal: true
+            focus: true
+            x: (window.width - width) / 2
+            y: 10
+            width: window.width / 3
+            height: parent.height - 20
+            title: "<b>Statistics table</b>"
+            standardButtons: Dialog.Ok | Dialog.Cancel
+
+            Flickable {
+                contentHeight: dialogColumn.height
+                contentWidth: 1/3 * window.width
+                boundsBehavior: Flickable.OvershootBounds
+
+                Rectangle {
+                    width: 1/4 * window.width
+                    height: statisticsTable.height - statisticsTable.header.height - statisticsTable.footer.height
+                    color: "white"
+
+                    Column {
+                        id: dialogColumn
+                        spacing: 10
+                        Repeater {
+                            model: electrodeSpikesModel
+
+                            Row {
+                                spacing: 20
+
+                                Label {
+                                    text: model.name
+                                    width: statisticsTable.width / 3
+                                }
+
+                                Label {
+                                    text: model.spikes
+                                    width: statisticsTable.width / 3
+                                }
+                            }
+                        }
+                    }
+                }
+                ScrollIndicator.vertical: ScrollIndicator { }
             }
         }
     }
@@ -103,7 +154,6 @@ Controls.SplitView {
         boundsBehavior: Flickable.OvershootBounds
 
         Rectangle {
-            id: rect
             width: 1/4 * window.width
             height: Math.max(column.height, electrodePlacement.height)
             color: "white"
@@ -131,7 +181,7 @@ Controls.SplitView {
                         clip: true
                         rotation: -90
                         signal colorGradientChanged()
-                        onColorGradientChanged: showStatistics()
+                        onColorGradientChanged: showStatistics(true)
 
                         gradient: Gradient {
                             id: gradient
@@ -140,7 +190,7 @@ Controls.SplitView {
                             GradientStop { position: 0.5 }
                             GradientStop { position: 0.7 }
                             GradientStop { position: 0.9 }
-                        }                        
+                        }
 
                         MouseArea  {
                             id: gradientMouse
@@ -190,14 +240,9 @@ Controls.SplitView {
                     checked: false
                 }
 
-//                Button {
-//                    id: resetButton
-//                    text: qsTr("Reset positions")
-//                }
-
                 Button {
-                    id: resetZoomButton
-                    text: qsTr("Reset zoom")
+                    id: statisticsTableButton
+                    text: qsTr("Show statistics table")
                 }
 
                 ComboBox {
@@ -263,6 +308,7 @@ Controls.SplitView {
                                 columnCount: columns
                                 rowCount: rows
                                 linkList: links
+                                repeaterIndex: index
                                 yPosition: elecItem.getYCoordinate(index)
                             }
                         }
