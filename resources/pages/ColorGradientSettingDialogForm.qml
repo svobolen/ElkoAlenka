@@ -14,6 +14,8 @@ Item {
     property alias tileRepeater: tileRepeater
     property alias rangeSlider: rangeSlider
     property alias gradient: gradient
+    property alias minSpinBox: minSpinBox
+    property alias maxSpinBox: maxSpinBox
 
     Rectangle {
         anchors.fill: parent

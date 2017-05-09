@@ -7,8 +7,8 @@ ColorGradientSettingDialogForm {
         electrodePlacement.setColors(gradient.stops[0].color, gradient.stops[1].color,
                                      gradient.stops[2].color, gradient.stops[3].color,
                                      gradient.stops[4].color)
-        electrodePlacement.customMinSpikes = Math.round(rangeSlider.first.value)
-        electrodePlacement.customMaxSpikes = Math.round(rangeSlider.second.value)
+        electrodePlacement.customMinSpikes = Math.round(minSpinBox.value)
+        electrodePlacement.customMaxSpikes = Math.round(maxSpinBox.value)
         electrodePlacement.gradientParent.colorGradientChanged()
         setFooterButtons()
         stackView.pop()

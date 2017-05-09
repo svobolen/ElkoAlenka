@@ -193,6 +193,9 @@ ElectrodePlacementForm {
     }
 
     function confirm() {
+        if(loader.sourceComponent === fileComp) {
+            loader.sourceComponent = undefined
+        }
         loader.sourceComponent = fileComp;
     }
 
@@ -203,7 +206,7 @@ ElectrodePlacementForm {
             id: fileDialog
             folder: shortcuts.desktop
             selectExisting: false
-            nameFilters: [ "JPEG Image (*.jpg)", "PNG Image (*.png)", "Bitmap Image (*.bmp)", "All files (*)" ]
+            nameFilters: [ "JPEG Image (*.jpg)", "PNG Image (*.png)", "Bitmap Image (*.bmp)" ]
             onAccepted: {
                 takeScreenshot((fileDialog.fileUrl + "").replace('file:///', ''));
                 loader.sourceComponent = undefined
@@ -231,4 +234,5 @@ ElectrodePlacementForm {
     Loader {
         id: loader
     }
+
 }

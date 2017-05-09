@@ -18,6 +18,16 @@ ImageManagerForm {
     }
 
     function confirm() {
+
+        // close opened dialogs
+        for (var k = 0; k < swipe.count; k++) {
+            for (var i = 0; i < swipe.itemAt(k).images.count; i++) {
+                if(swipe.itemAt(k).images.itemAt(i).loader.sourceComponent !== undefined)
+                    swipe.itemAt(k).images.itemAt(i).loader.sourceComponent = undefined
+            }
+        }
+
+
         var checkedImages = getCheckedImages()
         console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
         window.images = checkedImages

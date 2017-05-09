@@ -135,22 +135,10 @@ Page {
     Button {
         id: addButton
         text: qsTr("Add new electrode")
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.margins: 50
+        anchors {top: parent.top; right: parent.right; margins: 50 }
         highlighted: true
         height: 60
     }
-
-//    Button {
-//        id: resetButton
-//        text: qsTr("Reset choice")
-//        anchors.bottom: parent.bottom
-//        anchors.right: parent.right
-//        anchors.margins: 50
-//        highlighted: true
-//        height: 60
-//    }
 
     Dialog {
         id: infoPopup

@@ -149,13 +149,12 @@ Page {
                 anchors.left: parent.left
                 onClicked: {
                     reallyDialog.open()
-                    //                    stackView.currentItem.reset()
                 }
             }
 
             PageIndicator {
                 id: pageIndicator
-                count: listView.count
+                count: listView.count - 1
                 currentIndex: listView.currentIndex
                 anchors {horizontalCenter: parent.horizontalCenter; verticalCenter: parent.verticalCenter}
                 spacing: 15
@@ -177,9 +176,17 @@ Page {
                 implicitHeight: parent.height
                 anchors.right: parent.right
                 highlighted: true
-                onClicked: stackView.currentItem.confirm()
+                onClicked: {
+                    enabled = false
+                    stackView.currentItem.confirm()
+                    enabled = true
+                }
             }
         }
+    }
+
+    BusyIndicator {
+        running: confirmButton.enabled === false
     }
 
     Drawer {

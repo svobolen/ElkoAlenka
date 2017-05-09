@@ -1,7 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Dialogs 1.2
 
-BrainForm {    
+BrainForm {
+
     mouseArea.onClicked: {
         if (brainImage.source == plusImgSource) {
             if (loader.sourceComponent === fileComp) {
@@ -20,10 +21,13 @@ BrainForm {
     }
 
     mouseArea.onPressed: {
+
+        //checking for open dialogs and menu on the page
         for(var i = 0; i < 4; i++) {
             if (brainImage.parent.children[i].loader.sourceComponent !== undefined) {
                 brainImage.parent.children[i].loader.sourceComponent = undefined
             }
+             brainImage.parent.children[i].menu.close()
         }
     }
 
@@ -94,7 +98,7 @@ BrainForm {
 
         FileDialog {
             id: fileDialog
-            nameFilters: [ "Image files (*.jpg *.png *.bmp)", "All files (*)" ]
+            nameFilters: [ "Image files (*.jpg *.png *.bmp)", "JPEG Image (*.jpg)", "PNG Image (*.png)", "Bitmap Image (*.bmp)" ]
             folder: shortcuts.pictures
             onAccepted: {
                 var path = fileDialog.fileUrl
