@@ -6,7 +6,7 @@ import QtQuick.Controls 2.1
 Controls.SplitView {
     id: electrodeSignalLink
 
-    property var name
+    property string name: qsTr("Link Signal with Electrode")
     property var electrodes
     property int maxSpikes: 0
     property int minSpikes: 0

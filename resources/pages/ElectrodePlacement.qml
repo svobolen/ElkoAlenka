@@ -62,7 +62,7 @@ ElectrodePlacementForm {
                             if(changeColors) {
 
                                 if (currElecSpikes < customMinSpikes) {
-                                    electrodeColor = "white"
+                                    electrodeColor = gradient.stops[0].color
 
                                 } else if ( currElecSpikes <= i ) {
                                     electrodeColor = gradient.stops[0].color;
@@ -80,12 +80,13 @@ ElectrodePlacementForm {
                                     electrodeColor = gradient.stops[4].color;
 
                                 } else {
-                                    electrodeColor = "white";
+                                    electrodeColor = gradient.stops[4].color;
                                 }
 
                                 currElec.rowRep.itemAt(k).colRep.itemAt(l).colorFill = electrodeColor;
                                 statisticsButton.text = "Hide statistics"
                                 statisticsButton.highlighted = true
+
 
                             } else {
 

@@ -24,7 +24,7 @@ Controls.SplitView {
     property alias colorDialog: colorDialog
     property alias statisticsTable: statisticsTable
 
-    property var name
+    property string name: qsTr("Electrode Placement")
     property int zHighest: 2
     property int currIndex: 1
     property bool zoomEnabled: false
@@ -34,7 +34,7 @@ Controls.SplitView {
     property int customMinSpikes: 0
     property int customMaxSpikes: 0
     property ListModel electrodes: ListModel {}
-    property ListModel electrodeSpikesModel: ListModel {} //ListElement {name: "C3", spikes: "5"}
+    property ListModel electrodeSpikesModel: ListModel {} //ListElement {name: "C3", spikes: "5"}, for statisticsTable
 
     orientation: Qt.Horizontal
     onCurrIndexChanged: {

@@ -4,7 +4,7 @@ import QtQuick.Controls 2.1
 
 Page {
     id: imageManager
-    property var name
+    property string name: qsTr("Image Manager")
     property var images
     property ListModel brains: ListModel {
         ListElement { sourcePath: "qrc:/images/brains/brain1.png"}

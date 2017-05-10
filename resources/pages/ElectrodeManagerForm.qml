@@ -5,8 +5,7 @@ import "../+universal"
 
 Page {
     id: item
-    property var name
-//    property alias resetButton: resetButton
+    property string name: qsTr("Electrode Manager")
     property alias addButton: addButton
     property alias stripRepeater: stripRep
     property alias gridRepeater: gridRep

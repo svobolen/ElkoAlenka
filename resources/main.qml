@@ -19,6 +19,9 @@ Page {
 
     signal switchToAlenka()
     signal exit()
+    signal saveState(var images, var minMax, ListModel electrodes, ListModel elecPositions)
+    signal saving()
+
 
     property var images
     property string file: filePath
@@ -97,20 +100,20 @@ Page {
                         width: parent.width
                         height: 100
                     }
-                    MenuItem {
-                        text: qsTr("Save session...")
-                        font.pixelSize: 30
-                        width: parent.width
-                        height: 100
-                        onTriggered: saveDialog.open()
-                    }
-                    MenuItem {
-                        text: qsTr("Open session...")
-                        font.pixelSize: 30
-                        width: parent.width
-                        height: 100
-                        onTriggered: openDialog.open()
-                    }
+                    //                    MenuItem {
+                    //                        text: qsTr("Save session...")
+                    //                        font.pixelSize: 30
+                    //                        width: parent.width
+                    //                        height: 100
+                    //                        onTriggered: saveDialog.open()
+                    //                    }
+                    //                    MenuItem {
+                    //                        text: qsTr("Open session...")
+                    //                        font.pixelSize: 30
+                    //                        width: parent.width
+                    //                        height: 100
+                    //                        onTriggered: openDialog.open()
+                    //                    }
                     MenuItem {
                         text: qsTr("About")
                         font.pixelSize: 30
@@ -123,7 +126,11 @@ Page {
                         font.pixelSize: 30
                         width: parent.width
                         height: 100
-                        onTriggered: window.exit()
+                        onTriggered: {
+                            window.exit()
+                            window.saveState(images, minMax, electrodes, elecPositions)
+
+                        }
                     }
                 }
             }
@@ -203,34 +210,29 @@ Page {
                 id: control
                 width: parent.width
                 height: 120
-                text: model.title
+                text: modelData.name
                 font.pixelSize: 30
                 highlighted: ListView.isCurrentItem
                 Universal.accent: Universal.Cyan
 
                 onClicked: {
-                    if (model.switchElement === true) {
+                    if (modelData.switchElement === true) {
                         window.switchToAlenka()
                         drawer.close()
                     }
                     else {
-                        changePage(model.title, model.source, index)
+                        listView.currentIndex = index
+                        titleLabel.text = modelData.name
+                        stackView.replace(modelData)
+                        modelData.enabled = true
+                        modelData.visible = true
                         drawer.close()
                     }
                 }
             }
-            model: pageModel
+            model: [ imageManager, electrodeManager, electrodeSignalLink, electrodePlacement, alenka ]
             ScrollIndicator.vertical: ScrollIndicator { }
 
-            ListModel {
-                id: pageModel
-                ListElement { title: qsTr("Welcome page"); source: "" }
-                ListElement { title: qsTr("Image Manager"); source: "qrc:/pages/ImageManager.qml" }
-                ListElement { title: qsTr("Electrode Manager"); source: "qrc:/pages/ElectrodeManager.qml" }
-                ListElement { title: qsTr("Link Signal with Electrode"); source: "qrc:/pages/ElectrodeSignalLink.qml"}
-                ListElement { title: qsTr("Electrode Placement"); source: "qrc:/pages/ElectrodePlacement.qml" }
-                ListElement { title: qsTr("Switch to Alenka"); switchElement: true }
-            }
             onCurrentIndexChanged: {
                 if (currentIndex == 4) {
                     confirmButton.text = qsTr("Export image")
@@ -278,12 +280,6 @@ Page {
             }
 
             function reset() { // do nothing
-            }
-        }
-
-        replaceEnter: Transition {
-            XAnimator {
-                duration: 0
             }
         }
     }
@@ -342,63 +338,18 @@ Page {
         onRejected: console.log("Saving file canceled.")
     }
 
-    Dialogs.FileDialog {
-        id: openDialog
-
-        property ListModel electrodeList: ListModel {}
-
-        nameFilters: [ "", qsTr("All files (*)") ]
-        folder: shortcuts.documents
-        onAccepted: {
-            var path = openDialog.fileUrl
-            openSessionPage.sourcePath = "qrc:/xmls/session.xml"
-            listView.currentIndex = 3   //index v listview
-            titleLabel.text = qsTr("Electrode Placement")
-
-            var sourceArray = []
-            for (var k = 0; k < openSessionPage.imageModel.count; k++) {
-                sourceArray.push(openSessionPage.imageModel.get(k).source)
-            }
-
-            for (var l = 0; l < openSessionPage.electrodesModel.count; l++) {
-                electrodeList.append({rows: openSessionPage.electrodesModel.get(l).rows,
-                                         columns: openSessionPage.electrodesModel.get(l).columns,
-                                         links: null})
-            }
-
-            stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": electrodeList, "images": sourceArray,
-                               "name": qsTr("Electrode Placement"), "minSpikes": 0, "maxSpikes": 97} )
-        }
-        onRejected: console.log("Choosing file canceled.")
-    }
-
-    Pages.OpenSession {
-        id: openSessionPage
-    }
-
     Pages.XmlModels {
         id: xmlModels
         sourcePath: file
     }
 
-    function changePage(title, source, indexNum) {
-        if (listView.currentIndex !== indexNum) {
+    Pages.ImageManager { id: imageManager; enabled: false; visible: false }
 
-            listView.currentIndex = indexNum
-            titleLabel.text = title
+    Pages.ElectrodeManager {id: electrodeManager; enabled: false; visible: false }
 
-            var stackItem = stackView.find(function(item, index) { return  item.name === title})
+    Pages.ElectrodeSignalLink {id: electrodeSignalLink; enabled: false; visible: false }
 
-            if (stackItem === null) {
-                stackView.push(source, {"name": title})
+    Pages.ElectrodePlacement {id: electrodePlacement; enabled: false; visible: false }
 
-            } else {
-                if (title === qsTr("Welcome page")) {
-                    stackView.push(stackView.initialItem)
-                } else {
-                    stackView.push(stackItem)
-                }
-            }
-        }
-    }
+    Item { id: alenka; property string name: qsTr("Switch to Alenka"); property bool switchElement: true }
 }
