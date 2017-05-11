@@ -14,6 +14,8 @@ DragTrackForm {
             mouseArea.parent.trackName = ""
             mouseArea.parent.trackId = -1
             mouseArea.parent.spikes = 0
+            electrodeType = []
+            electrodePosition = []
             tile.color = "white"
         }
     }
