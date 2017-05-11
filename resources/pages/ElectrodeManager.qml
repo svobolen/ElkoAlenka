@@ -13,9 +13,9 @@ ElectrodeManagerForm {
             infoPopup.open()
             console.log("User did not choose any electrode.")
         } else {
-
             window.signalLinkMain.electrodes = chosenElecs
-            window.changePage(3, window.signalLinkMain)
+            window.signalLinkMain.setPreviousState()
+            window.changePage(2, window.signalLinkMain)
         }
     }
 

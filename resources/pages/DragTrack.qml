@@ -5,14 +5,6 @@ DragTrackForm {
 
     mouseArea.onReleased: {
         mouseArea.parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
-
-        if (mouseArea.parent !== root) {
-            mouseArea.parent.alreadyContainsDrag = true
-            mouseArea.parent.name = trackName
-            mouseArea.parent.trackName = trackName
-            mouseArea.parent.trackId = trackId
-            tile.color = Universal.color(Universal.Cyan)
-        }
     }
 
     mouseArea.onPressed: {
@@ -25,6 +17,20 @@ DragTrackForm {
             tile.color = "white"
         }
     }
+
+    mouseArea.onParentChanged: {
+        if (mouseArea.parent !== root) {
+            mouseArea.parent.alreadyContainsDrag = true
+            mouseArea.parent.name = trackName
+            mouseArea.parent.trackName = trackName
+            mouseArea.parent.trackId = trackId
+            tile.color = Universal.color(Universal.Cyan)
+            electrodeType = [mouseArea.parent.rowCount, mouseArea.parent.columnCount]
+            electrodePosition = [mouseArea.parent.rowIndex, mouseArea.parent.columnIndex]
+
+        }
+    }
+
     tile.states: State {
         when: mouseArea.drag.active
         ParentChange {

@@ -14,7 +14,7 @@ Page {
     property alias tabBar: bar
     property alias infoPopup: infoPopup
     property alias addDialog: addDialog
-    property ListModel chosenElectrodesList: ListModel {} //ListElement { columns: 0; rows: 0}
+    property ListModel chosenElectrodesList: ListModel {} //ListElement { columns: 0; rows: 0 }
 
     header: TabBar {
         id: bar

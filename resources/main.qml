@@ -23,7 +23,6 @@ Page {
     signal saving()
 
 
-    property var images
     property string file: filePath
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
@@ -113,20 +112,6 @@ Page {
                         width: parent.width
                         height: 100
                     }
-                    //                    MenuItem {
-                    //                        text: qsTr("Save session...")
-                    //                        font.pixelSize: 30
-                    //                        width: parent.width
-                    //                        height: 100
-                    //                        onTriggered: saveDialog.open()
-                    //                    }
-                    //                    MenuItem {
-                    //                        text: qsTr("Open session...")
-                    //                        font.pixelSize: 30
-                    //                        width: parent.width
-                    //                        height: 100
-                    //                        onTriggered: openDialog.open()
-                    //                    }
                     MenuItem {
                         text: qsTr("About")
                         font.pixelSize: 30
@@ -141,7 +126,9 @@ Page {
                         height: 100
                         onTriggered: {
                             window.exit()
-                            window.saveState(images, minMax, electrodes, elecPositions)
+                            window.saveState(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                             electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], electrodePlacementMain.electrodes/*,
+                                             positions*/)
 
                         }
                     }
@@ -233,26 +220,22 @@ Page {
                         window.switchToAlenka()
 
                     } else if (listView.currentIndex != index){
-
                         changePage(index, modelData)
                     }
 
                     drawer.close()
-
                 }
             }
             model: [ imageManagerMain, electrodeManagerMain, electrodeSignalLinkMain, electrodePlacementMain, alenka ]
             ScrollIndicator.vertical: ScrollIndicator { }
 
             onCurrentIndexChanged: {
-                if (currentIndex == 4) {
+                if (currentIndex == 3) {
                     confirmButton.text = qsTr("Export image")
                     confirmButton.width = 300
-                    confirmButton.highlighted = false
                 } else if (confirmButton.text !== qsTr("Next >")){
                     confirmButton.text = qsTr("Next >")
                     confirmButton.width = 200
-                    confirmButton.highlighted = true
                 }
             }
         }
@@ -287,7 +270,7 @@ Page {
             }
 
             function confirm() {
-                changePage(1, imageManagerMain)
+                changePage(0, imageManagerMain)
             }
 
             function reset() { // do nothing

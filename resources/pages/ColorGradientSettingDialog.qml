@@ -12,7 +12,6 @@ ColorGradientSettingDialogForm {
         electrodePlacement.gradientParent.colorGradientChanged()
         setFooterButtons()
         stackView.pop()
-        window.confirmButton.width = 300
     }
 
     cancelButton.onClicked: {
@@ -53,10 +52,9 @@ ColorGradientSettingDialogForm {
 
     function setFooterButtons() {
         window.confirmButton.enabled = true
+        window.confirmButton.width = 300
         window.confirmButton.text = "Export image"
         window.resetButton.enabled = true
         window.resetButton.text = "X Clean"
-        window.confirmButton.highlighted = false
     }
-
 }

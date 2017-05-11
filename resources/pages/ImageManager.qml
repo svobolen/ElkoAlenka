@@ -30,9 +30,9 @@ ImageManagerForm {
 
         var checkedImages = getCheckedImages()
         console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
-        window.images = checkedImages
+        window.electrodePlacementMain.images = checkedImages
 
-        window.changePage(2, window.electrodeManagerMain)
+        window.changePage(1, window.electrodeManagerMain)
     }
 
     function reset() {

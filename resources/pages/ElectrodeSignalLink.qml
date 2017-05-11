@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import QtQuick.Controls 2.1
 
 
 ElectrodeSignalLinkForm {
@@ -10,10 +11,9 @@ ElectrodeSignalLinkForm {
         fillLinkedElectrodesList()
 
         window.electrodePlacementMain.electrodes = linkedElectrodesList
-        window.electrodePlacementMain.images = window.images
         window.electrodePlacementMain.minSpikes = minSpikes
         window.electrodePlacementMain.maxSpikes = maxSpikes
-        changePage(4, window.electrodePlacementMain)
+        changePage(3, window.electrodePlacementMain)
     }
 
     function reset() {
@@ -28,6 +28,27 @@ ElectrodeSignalLinkForm {
                 dragRep.itemAt(i).mouseArea.parent.spikes = 0
                 dragRep.itemAt(i).tile.color = "white"
                 dragRep.itemAt(i).mouseArea.parent = dragRep.itemAt(i).root
+            }
+        }
+    }
+
+    function setPreviousState() {
+        reset()
+
+        for (var i = 0; i < dragRep.count; i++) {
+
+            var dragItem = dragRep.itemAt(i)
+
+            for(var j = 0; j < elecRep.count; j++) {
+
+                if (elecRep.itemAt(j).bElectrode.rowCount === dragItem.electrodeType[0]) {
+
+                    if (elecRep.itemAt(j).bElectrode.columnCount === dragItem.electrodeType[1]) {
+
+                        dragItem.mouseArea.parent = elecRep.itemAt(j).bElectrode.rowRep.itemAt(dragItem.electrodePosition[0]).colRep.itemAt(dragItem.electrodePosition[1])
+                        break
+                    }
+                }
             }
         }
     }

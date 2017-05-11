@@ -40,6 +40,8 @@ Item {
                             readonly property int defaultName: columnCount * ( rowCount - row.getIndex() ) + ( modelData + 1 )
                             property int columnCount: root.columnCount  //for console logs (signal link)
                             property int rowCount: root.rowCount        //for console logs (signal link)
+                            property int columnIndex: index
+                            property int rowIndex: row.getIndex() - 1
                             property string trackName: ""
                             property bool alreadyContainsDrag: false
                             property int trackId: -1
@@ -100,13 +102,12 @@ Item {
                                             }
                                         }
                                     } else {
-                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: 0})
+                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: 0} )
                                     }
                                 }
                             }
 
                             onSpikesChanged: {
-//                                console.log(linkedTracks.count + " " + spikes, defaultName)
                                 for (var i = 0; i < linkedTracks.count; i++) {
                                     if (linkedTracks.get(i).electrodeNumber === defaultName) {
                                         linkedTracks.get(i).spikes = spikes
@@ -126,7 +127,9 @@ Item {
                                         }
                                     }
                                 }
+
                                 nameToChange = true
+
                             }
                         }
                     }

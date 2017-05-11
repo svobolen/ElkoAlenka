@@ -28,9 +28,10 @@ Controls.SplitView {
 
             Column {
                 id: source
-                width: 100
+                width: 130
                 spacing: 30
                 padding: 30
+                leftPadding: 60
                 Repeater {
                     id: dragRep
                     model: window.xmlModels.trackModel
@@ -59,7 +60,7 @@ Controls.SplitView {
             Repeater {
                 id: elecRep
                 model: electrodes
-                Row {
+                delegate: Row {
                     property alias bElectrode: bElectrode
                     spacing: 20
                     Label {

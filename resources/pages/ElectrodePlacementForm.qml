@@ -37,6 +37,8 @@ Controls.SplitView {
     property ListModel electrodeSpikesModel: ListModel {} //ListElement {name: "C3", spikes: "5"}, for statisticsTable
 
     orientation: Qt.Horizontal
+    onMinSpikesChanged: customMinSpikes = minSpikes
+    onMaxSpikesChanged: customMaxSpikes = maxSpikes
     onCurrIndexChanged: {
         if (currIndex > 0) {
             imageArea.children[currIndex].z = ++zHighest    //clicked electrode on the top
