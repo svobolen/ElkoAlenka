@@ -31,7 +31,8 @@ ImageManagerForm {
         var checkedImages = getCheckedImages()
         console.log("User chose " + checkedImages.length + " image(s): " + checkedImages.toString())
         window.images = checkedImages
-        window.changePage(qsTr("Electrode Manager"), "qrc:/pages/ElectrodeManager.qml", 2)
+
+        window.changePage(2, window.electrodeManagerMain)
     }
 
     function reset() {

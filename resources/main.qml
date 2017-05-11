@@ -28,6 +28,19 @@ Page {
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
     property alias xmlModels: xmlModels
+    property alias imageManagerMain: imageManagerMain
+    property alias electrodeManagerMain: electrodeManagerMain
+    property alias signalLinkMain: electrodeSignalLinkMain
+    property alias electrodePlacementMain: electrodePlacementMain
+
+    function changePage(pageIndex, page) {
+        listView.currentIndex = pageIndex
+        titleLabel.text = page.name
+        stackView.replace(page)
+        page.enabled = true
+        page.visible = true
+    }
+
 
     header: ToolBar {
         height: 100
@@ -218,19 +231,17 @@ Page {
                 onClicked: {
                     if (modelData.switchElement === true) {
                         window.switchToAlenka()
-                        drawer.close()
+
+                    } else if (listView.currentIndex != index){
+
+                        changePage(index, modelData)
                     }
-                    else {
-                        listView.currentIndex = index
-                        titleLabel.text = modelData.name
-                        stackView.replace(modelData)
-                        modelData.enabled = true
-                        modelData.visible = true
-                        drawer.close()
-                    }
+
+                    drawer.close()
+
                 }
             }
-            model: [ imageManager, electrodeManager, electrodeSignalLink, electrodePlacement, alenka ]
+            model: [ imageManagerMain, electrodeManagerMain, electrodeSignalLinkMain, electrodePlacementMain, alenka ]
             ScrollIndicator.vertical: ScrollIndicator { }
 
             onCurrentIndexChanged: {
@@ -276,7 +287,7 @@ Page {
             }
 
             function confirm() {
-                changePage("Image Manager", "qrc:/pages/ImageManager.qml", 1)
+                changePage(1, imageManagerMain)
             }
 
             function reset() { // do nothing
@@ -343,13 +354,13 @@ Page {
         sourcePath: file
     }
 
-    Pages.ImageManager { id: imageManager; enabled: false; visible: false }
+    Pages.ImageManager { id: imageManagerMain; enabled: false; visible: false }
 
-    Pages.ElectrodeManager {id: electrodeManager; enabled: false; visible: false }
+    Pages.ElectrodeManager {id: electrodeManagerMain; enabled: false; visible: false }
 
-    Pages.ElectrodeSignalLink {id: electrodeSignalLink; enabled: false; visible: false }
+    Pages.ElectrodeSignalLink {id: electrodeSignalLinkMain; enabled: false; visible: false }
 
-    Pages.ElectrodePlacement {id: electrodePlacement; enabled: false; visible: false }
+    Pages.ElectrodePlacement {id: electrodePlacementMain; enabled: false; visible: false }
 
     Item { id: alenka; property string name: qsTr("Switch to Alenka"); property bool switchElement: true }
 }

@@ -13,9 +13,9 @@ ElectrodeManagerForm {
             infoPopup.open()
             console.log("User did not choose any electrode.")
         } else {
-            listView.currentIndex = 3
-            titleLabel.text = "Link Signal with Electrode"
-            stackView.push( "qrc:/pages/ElectrodeSignalLink.qml", {"electrodes": chosenElecs, "name": "Link Signal with Electrode"} )
+
+            window.signalLinkMain.electrodes = chosenElecs
+            window.changePage(3, window.signalLinkMain)
         }
     }
 

@@ -8,10 +8,12 @@ ElectrodeSignalLinkForm {
     function confirm() {
         readXml()
         fillLinkedElectrodesList()
-        titleLabel.text = "Electrode Placement"
-        listView.currentIndex = 4
-        stackView.push( "qrc:/pages/ElectrodePlacement.qml", {"electrodes": linkedElectrodesList, "images": window.images,"name": qsTr("Electrode Placement"),
-                           "minSpikes": minSpikes, "maxSpikes": maxSpikes} )
+
+        window.electrodePlacementMain.electrodes = linkedElectrodesList
+        window.electrodePlacementMain.images = window.images
+        window.electrodePlacementMain.minSpikes = minSpikes
+        window.electrodePlacementMain.maxSpikes = maxSpikes
+        changePage(4, window.electrodePlacementMain)
     }
 
     function reset() {
