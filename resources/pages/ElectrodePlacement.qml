@@ -209,7 +209,23 @@ ElectrodePlacementForm {
             selectExisting: false
             nameFilters: [ "JPEG Image (*.jpg)", "PNG Image (*.png)", "Bitmap Image (*.bmp)" ]
             onAccepted: {
-                takeScreenshot((fileDialog.fileUrl + "").replace('file:///', ''));
+                var filePath = fileDialog.fileUrl + "";
+                filePath = filePath.replace('file:///', '');
+
+                // If the path doesn't start with Windows disk letter, add Unix root directory slash.
+                if (filePath.search('[A-Z]:') == -1)
+                    filePath = '/' + filePath;
+
+                // Get the suffix corresponding to the selected type.
+                var suffixes = ["jpg", "png", "bmp"]
+                var suffix = suffixes[nameFilters.indexOf(fileDialog.selectedNameFilter)];
+
+                // If the name doesn't end with the right suffix, append it.
+                var regex = '[.]' + suffix + '$';
+                if (filePath.search(regex) == -1)
+                    filePath += '.' + suffix;
+
+                takeScreenshot(filePath);
                 loader.sourceComponent = undefined
             }
             onRejected: {
@@ -223,7 +239,7 @@ ElectrodePlacementForm {
                         console.log("Screenshot has been saved to " + filePath);
                         dialog.open();
                     } else {
-                        console.error('Unknown error saving to ',filePath);
+                        console.error('Unknown error saving to ', filePath);
                     }
                 });
             }
