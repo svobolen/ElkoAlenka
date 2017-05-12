@@ -24,6 +24,7 @@ Page {
 
 
     property string file: filePath
+    property bool fileUpdated: filePathUpdated
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
     property alias xmlModels: xmlModels
@@ -106,6 +107,9 @@ Page {
                     font.pixelSize: 30
                     transformOrigin: Menu.TopRight
 
+                    onOpened: menuTimer.start()
+                    onClosed: menuTimer.stop()
+
                     MenuItem {
                         text: qsTr("Close menu")
                         font.pixelSize: 30
@@ -133,6 +137,11 @@ Page {
                         }
                     }
                 }
+                Timer {
+                    id: menuTimer
+                    interval: 5000
+                    onTriggered: optionsMenu.close()
+                }
             }
         }
     }
@@ -149,7 +158,7 @@ Page {
             spacing: 100
             ToolButton {
                 id: resetButton
-                text: qsTr("X Clean")
+                text: qsTr("Reset")
                 font.pixelSize: 40
                 implicitWidth: 200
                 implicitHeight: parent.height
@@ -335,6 +344,13 @@ Page {
     Pages.XmlModels {
         id: xmlModels
         sourcePath: file
+    }
+    onFileUpdatedChanged: {
+        console.log(fileUpdated)
+//        if (fileUpdated) {
+//            xmlModels.sourcePath = file
+//        }
+        fileUpdated = false
     }
 
     Pages.ImageManager { id: imageManagerMain; enabled: false; visible: false }

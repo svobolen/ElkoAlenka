@@ -39,6 +39,7 @@ Controls.SplitView {
     orientation: Qt.Horizontal
     onMinSpikesChanged: customMinSpikes = minSpikes
     onMaxSpikesChanged: customMaxSpikes = maxSpikes
+    onImagesChanged: reset()
     onCurrIndexChanged: {
         if (currIndex > 0) {
             imageArea.children[currIndex].z = ++zHighest    //clicked electrode on the top

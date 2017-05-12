@@ -55,6 +55,6 @@ ColorGradientSettingDialogForm {
         window.confirmButton.width = 300
         window.confirmButton.text = "Export image"
         window.resetButton.enabled = true
-        window.resetButton.text = "X Clean"
+        window.resetButton.text = "Reset"
     }
 }
