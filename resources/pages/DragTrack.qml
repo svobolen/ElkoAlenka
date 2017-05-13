@@ -14,23 +14,23 @@ DragTrackForm {
             mouseArea.parent.trackName = ""
             mouseArea.parent.trackId = -1
             mouseArea.parent.spikes = 0
-            electrodeType = []
-            electrodePosition = []
             tile.color = "white"
         }
     }
 
     mouseArea.onParentChanged: {
-        if (mouseArea.parent !== root) {
+        if (mouseArea.parent !== root && mouseArea.parent != null) {
             mouseArea.parent.alreadyContainsDrag = true
             mouseArea.parent.name = trackName
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
             tile.color = Universal.color(Universal.Cyan)
-            electrodeType = [mouseArea.parent.rowCount, mouseArea.parent.columnCount]
-            electrodePosition = [mouseArea.parent.rowIndex, mouseArea.parent.columnIndex]
-
         }
+    }
+
+    function resetPosition() {
+        mouseArea.parent = root
+        tile.color = "white"
     }
 
     tile.states: State {

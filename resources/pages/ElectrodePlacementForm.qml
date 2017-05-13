@@ -41,7 +41,7 @@ Controls.SplitView {
     onMaxSpikesChanged: customMaxSpikes = maxSpikes
     onImagesChanged: reset()
     onCurrIndexChanged: {
-        if (currIndex > 0) {
+        if (currIndex > 0 && imageArea.children.length > currIndex) {
             imageArea.children[currIndex].z = ++zHighest    //clicked electrode on the top
         }
     }
@@ -269,6 +269,7 @@ Controls.SplitView {
                             text: rows + "x" + columns
                             anchors.verticalCenter: parent.verticalCenter
                         }
+
                         RoundButton {
                             id: plusButton
                             text: "+"
@@ -283,8 +284,10 @@ Controls.SplitView {
                                                                           "color": elecItem.children[elecItem.children.length-1].basicE.color,
                                                                           "yPosition": elecItem.getYCoordinate(index)});
                                 console.log("New view on electrode " + rows + "x" + columns + " added.")
+
                             }
                         }
+
                         Item {
                             id:elecItem
                             height: electrode.height
@@ -295,6 +298,7 @@ Controls.SplitView {
                                     children[i].color = color
                                 }
                             }
+
                             function getYCoordinate(index) {
                                 var temp = comboBox.y + comboBox.height + column.spacing + column.padding
                                 if (index === 0) {
@@ -313,6 +317,19 @@ Controls.SplitView {
                                 linkList: links
                                 repeaterIndex: index
                                 yPosition: elecItem.getYCoordinate(index)
+                                basicE.parent: eParent === "imageArea" ? imageArea : root
+                                basicE.x: eX
+                                basicE.y: eY
+                                basicE.z: eZ
+                                basicE.rotation: eRotation
+                                basicE.scale: eScale
+
+                                basicE.onParentChanged: electrodes.setProperty(index, "eParent", basicE.parent === root ? "root" : "imageArea")
+                                basicE.onXChanged: electrodes.setProperty(index, "eX", basicE.x)
+                                basicE.onYChanged: electrodes.setProperty(index, "eY", basicE.y)
+                                basicE.onZChanged: electrodes.setProperty(index, "eZ", basicE.z)
+                                basicE.onRotationChanged: electrodes.setProperty(index, "eRotation", basicE.rotation)
+                                basicE.onScaleChanged: electrodes.setProperty(index, "eScale", basicE.scale)
                             }
                         }
                     }

@@ -6,8 +6,6 @@ Item {
     property string trackName: "X"
     property int trackId: -1
     property int spikes: 0
-    property var electrodeType: []  //rows, column
-    property var electrodePosition: [] //row, column number
 
     property alias mouseArea: mouseArea
     property alias tile: tile

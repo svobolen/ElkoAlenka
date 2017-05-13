@@ -19,12 +19,13 @@ Page {
 
     signal switchToAlenka()
     signal exit()
-    signal saveState(var images, var minMax, ListModel electrodes, ListModel elecPositions)
+    signal saveSession(var images, var minMax, ListModel electrodes, ListModel elecPositions)
     signal saving()
 
 
     property string file: filePath
-    property bool fileUpdated: filePathUpdated
+//    property bool fileUpdated: filePathUpdated
+
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
     property alias xmlModels: xmlModels
@@ -130,9 +131,8 @@ Page {
                         height: 100
                         onTriggered: {
                             window.exit()
-                            window.saveState(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                             electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], electrodePlacementMain.electrodes/*,
-                                             positions*/)
+                            window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                             electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], electrodePlacementMain.electrodes)
 
                         }
                     }
@@ -345,13 +345,13 @@ Page {
         id: xmlModels
         sourcePath: file
     }
-    onFileUpdatedChanged: {
-        console.log(fileUpdated)
+//    onFileUpdatedChanged: {
+//        console.log(fileUpdated)
 //        if (fileUpdated) {
 //            xmlModels.sourcePath = file
 //        }
-        fileUpdated = false
-    }
+//        fileUpdated = false
+//    }
 
     Pages.ImageManager { id: imageManagerMain; enabled: false; visible: false }
 
