@@ -81,6 +81,20 @@ ElectrodeSignalLinkForm {
         }
     }
 
+//    function appendElectrodes() {
+//        for ( var m = 0; m < elecRep.count; m++) {
+//            if (electrodePlacementMain.electrodes.length <= m) return
+
+////            if (elecRep.itemAt(m))
+//        }
+//    }
+
+//    function compareListElement(listElementA, listElementB) {
+//        if (listElementA.attributes.length !== listElementB.attributes.length) return false
+
+////        for (var i = 0;listElementA.attributes.length)
+//    }
+
     function linkedTracksAreEqual(elementIndex, linkListA, linkListB) {
 
         for (var l = 0; l < linkListA.count; l++) {

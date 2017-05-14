@@ -19,12 +19,12 @@ Page {
 
     signal switchToAlenka()
     signal exit()
-    signal saveSession(var images, var minMax, ListModel electrodes, ListModel elecPositions)
+    signal saveSession(string images, var minMax, string electrodes)
     signal saving()
 
 
     property string file: filePath
-//    property bool fileUpdated: filePathUpdated
+    //    property bool fileUpdated: filePathUpdated
 
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
@@ -42,6 +42,45 @@ Page {
         page.visible = true
     }
 
+    function loadSession(images, minMax, electrodes) {
+//        console.log(electrodes.length)
+        // ({ rows: 1, columns: 1, links: listmodel, eParent: "root", eX: 0, eY:0, eZ: 0, eScale: 1, eRotation: 0})
+
+        for (var i = 0; i < electrodes.length; i++) {
+            var JsonString = electrodes[i]
+            var JsonObject= JSON.parse(JsonString);
+
+            //retrieve values from JSON again
+            var aString = JsonObject.rows;
+            var bString = JsonObject.columns;
+            var eparent = JsonObject.eParent;
+            var ex = JsonObject.eX
+            var ey = JsonObject.eY
+            var ez = JsonObject.eZ
+            var escale = JsonObject.eScale
+            var eRotation = JsonObject.eRotation
+            var spikes = JsonObject.links
+
+//            console.log(aString);
+//            console.log(bString);
+//            console.log(eparent)
+//            console.log(ex)
+//            console.log(ey)
+//            console.log(ez)
+//            console.log(escale)
+//            console.log(eRotation)
+//            console.log(spikes)
+//            console.log("")
+        }
+    }
+
+    function setDataForSave() {
+        var electrodesData = []
+        for (var i = 0; i < electrodePlacementMain.electrodes.count; i++) {
+            electrodesData[i] = JSON.stringify(electrodePlacementMain.electrodes.get(i))
+        }
+        return electrodesData
+    }
 
     header: ToolBar {
         height: 100
@@ -130,10 +169,13 @@ Page {
                         width: parent.width
                         height: 100
                         onTriggered: {
-                            window.exit()
-                            window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                             electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], electrodePlacementMain.electrodes)
 
+                            window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], setDataForSave())
+
+                            window.loadSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], setDataForSave())
+//                            window.exit()
                         }
                     }
                 }
@@ -345,13 +387,13 @@ Page {
         id: xmlModels
         sourcePath: file
     }
-//    onFileUpdatedChanged: {
-//        console.log(fileUpdated)
-//        if (fileUpdated) {
-//            xmlModels.sourcePath = file
-//        }
-//        fileUpdated = false
-//    }
+    //    onFileUpdatedChanged: {
+    //        console.log(fileUpdated)
+    //        if (fileUpdated) {
+    //            xmlModels.sourcePath = file
+    //        }
+    //        fileUpdated = false
+    //    }
 
     Pages.ImageManager { id: imageManagerMain; enabled: false; visible: false }
 
