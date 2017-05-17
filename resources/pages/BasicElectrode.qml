@@ -8,7 +8,7 @@ Item {
     property int size: 40
     property bool droppingEnabled: false
     property string color: "white"
-    property ListModel linkedTracks: ListModel { }  //ListElement {electrodeNumber: defaultName, wave: name, spikes: 0})
+    property ListModel linkedTracks: ListModel { }  //ListElement {electrodeNumber: defaultName, wave: name, spikes: 0, electrodeID: -1})
 
     property alias rowRep: rowRep
 
@@ -102,7 +102,7 @@ Item {
                                             }
                                         }
                                     } else {
-                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: 0} )
+                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: 0, electrodeID: -1} )
                                     }
                                 }
                             }

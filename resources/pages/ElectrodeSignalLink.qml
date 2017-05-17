@@ -95,7 +95,7 @@ ElectrodeSignalLinkForm {
 ////        for (var i = 0;listElementA.attributes.length)
 //    }
 
-    function linkedTracksAreEqual(elementIndex, linkListA, linkListB) {
+    function linkedTracksAreEqual(linkListA, linkListB) {
 
         for (var l = 0; l < linkListA.count; l++) {
 
@@ -108,6 +108,9 @@ ElectrodeSignalLinkForm {
     }
 
     function readXml() {
+
+        // set min, max to electrode placement
+        // set spikes to linked tracks
         var spikes = 0
         var min = 0
         var max = 0

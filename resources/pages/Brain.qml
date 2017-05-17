@@ -5,12 +5,16 @@ BrainForm {
 
     mouseArea.onClicked: {
         if (brainImage.source == plusImgSource) {
+            // close file dialog if opened
             if (loader.sourceComponent === fileComp) {
                 loader.sourceComponent = undefined
             }
+
+            // open file dialog
             loader.sourceComponent = fileComp
 
         } else {
+            // check image
             checkbox.checked = !checkbox.checked
             menu.visible = false
         }
@@ -22,7 +26,7 @@ BrainForm {
 
     mouseArea.onPressed: {
 
-        //checking for open dialogs and menu on the page
+        //check for open dialogs and menu on the page a close them
         for(var i = 0; i < 4; i++) {
             if (brainImage.parent.children[i].loader.sourceComponent !== undefined) {
                 brainImage.parent.children[i].loader.sourceComponent = undefined
@@ -32,9 +36,12 @@ BrainForm {
     }
 
     changeMenu.onTriggered: {
+        // close opened file dialog
         if (loader.sourceComponent === fileComp) {
             loader.sourceComponent = undefined
         }
+
+        // open file dialog
         loader.sourceComponent = fileComp
     }
 
@@ -46,6 +53,7 @@ BrainForm {
 
         } else {
 
+            // delete image and move following images one position forward
             for (var j = imageManager.swipe.currentIndex; j < imageManager.swipe.count; j++) {
 
                 var temp = imageManager.swipe.itemAt(j).images
@@ -71,6 +79,8 @@ BrainForm {
                     for (var k = 0; k < imageManager.swipe.itemAt(j).images.count; k++) {
                         empty = empty && !imageManager.swipe.itemAt(j).images.itemAt(k).visible
                     }
+
+                    // if last page is empty, delete it
                     if (empty === true) {
                         imageManager.swipe.removeItem(imageManager.swipe.count - 1)
                     }
@@ -105,9 +115,11 @@ BrainForm {
                 if (checkIfImage(path.toString())) {
 
                     if(brainImage.source == plusImgSource) {
+
                         // add new empty picture
                         if (orderNum < imageManager.swipe.itemAt(imageManager.swipe.currentIndex).images.count - 1) {
                             imageManager.swipe.itemAt(imageManager.swipe.currentIndex).images.itemAt(orderNum+1).visible = true
+
                         } else {
                             imageManager.swipe.addItem(newPage.createObject(imageManager.swipe, {"imageModel": imageManager.pluses}))
                             imageManager.swipe.currentIndex++
@@ -121,11 +133,13 @@ BrainForm {
                     console.log("Chosen file is not an image.")
                     info.open()
                 }
+
+                // close file dialog
                 loader.sourceComponent = undefined
             }
             onRejected: {
                 loader.sourceComponent = undefined
-                console.log("Choosing file canceled.")
+//                console.log("Choosing file canceled.")
             }
             Component.onCompleted: { open() }
         }

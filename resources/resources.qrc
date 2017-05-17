@@ -24,7 +24,6 @@
         <file>pages/ElectrodeSignalLinkForm.qml</file>
         <file>pages/ImageManager.qml</file>
         <file>pages/ImageManagerForm.qml</file>
-        <file>pages/OpenSession.qml</file>
         <file>pages/XmlModels.qml</file>
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>

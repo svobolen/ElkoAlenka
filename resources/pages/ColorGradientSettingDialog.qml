@@ -4,9 +4,13 @@ import QtQuick.Controls.Universal 2.1
 ColorGradientSettingDialogForm {
 
     applyButton.onClicked: {
+
+        // set colors to electrode placement gradient
         electrodePlacement.setColors(gradient.stops[0].color, gradient.stops[1].color,
                                      gradient.stops[2].color, gradient.stops[3].color,
                                      gradient.stops[4].color)
+
+        // set min a max to electrode placement
         electrodePlacement.customMinSpikes = Math.round(minSpinBox.value)
         electrodePlacement.customMaxSpikes = Math.round(maxSpinBox.value)
         electrodePlacement.gradientParent.colorGradientChanged()
@@ -15,22 +19,12 @@ ColorGradientSettingDialogForm {
     }
 
     cancelButton.onClicked: {
-        for(var i = 0; i < tileRepeater.count; i++) {
-            tileRepeater.itemAt(i).mouseArea.parent = tileRepeater.itemAt(i)
-        }
-        setColors(electrodePlacement.gradient.stops[0].color, electrodePlacement.gradient.stops[1].color, electrodePlacement.gradient.stops[2].color,
-                  electrodePlacement.gradient.stops[3].color, electrodePlacement.gradient.stops[4].color)
-        setFooterButtons()
+        resetChanges()
         stackView.pop()
     }
 
     backButton.onClicked: {
-        for(var i = 0; i < tileRepeater.count; i++) {
-            tileRepeater.itemAt(i).mouseArea.parent = tileRepeater.itemAt(i)
-        }
-        setColors(electrodePlacement.gradient.stops[0].color, electrodePlacement.gradient.stops[1].color, electrodePlacement.gradient.stops[2].color,
-                  electrodePlacement.gradient.stops[3].color, electrodePlacement.gradient.stops[4].color)
-        setFooterButtons()
+        resetChanges()
         stackView.pop()
     }
 
@@ -50,7 +44,20 @@ ColorGradientSettingDialogForm {
                   Universal.color(Universal.Red))
     }
 
+    function resetChanges() {
+
+        // reset dialog to previous states
+        for(var i = 0; i < tileRepeater.count; i++) {
+            tileRepeater.itemAt(i).mouseArea.parent = tileRepeater.itemAt(i)
+        }
+        setColors(electrodePlacement.gradient.stops[0].color, electrodePlacement.gradient.stops[1].color, electrodePlacement.gradient.stops[2].color,
+                  electrodePlacement.gradient.stops[3].color, electrodePlacement.gradient.stops[4].color)
+        setFooterButtons()
+    }
+
     function setFooterButtons() {
+
+        // reset footers buttons to previous state
         window.confirmButton.enabled = true
         window.confirmButton.width = 300
         window.confirmButton.text = "Export image"

@@ -17,7 +17,10 @@ ElectrodePlacementForm {
             showStatistics(true)
     }
 
+    // implement reset button on page footer
     function reset() {
+
+        // reset page to default position
         var electrodeI;
         for (var i = 0; i < electrodeRep.count; i++) {
             for (var j = 0; j < electrodeRep.itemAt(i).elec.children.length; j++) {
@@ -126,6 +129,8 @@ ElectrodePlacementForm {
         window.confirmButton.text = ""
         window.resetButton.enabled = false
         window.resetButton.text = ""
+
+        // open dialog with setting of color gradient
         stackView.push(colorDialog, {})
     }
 
@@ -134,10 +139,12 @@ ElectrodePlacementForm {
     }
 
     zoomSwitch.onCheckedChanged: {
+        // enable or disable image zoom
         zoomEnabled = zoomSwitch.checked;
     }
 
     fixButton.onCheckedChanged: {
+        // fix or change electrodes positions
         var electrodeI;
         for (var i = 0; i < electrodeRep.count; i++) {
             for (var j = 0; j < electrodeRep.itemAt(i).elec.children.length; j++) {
@@ -150,12 +157,14 @@ ElectrodePlacementForm {
     }
 
     function setColors(color1, color3, color5, color7, color9) {
+        // set colors of gradient
         for (var i = 0; i < arguments.length; i++) {
             setColor(i, arguments[i])
         }
     }
 
     function setColor(gradientNum, color) {
+        // set gradient color on specific gradient stop
         gradient.stops[gradientNum].color = color
     }
 
@@ -170,10 +179,14 @@ ElectrodePlacementForm {
     function changeNames(comboBoxValue) {
         var currElec
         for (var i = 0; i < electrodeRep.count; i++) {
+
             for (var j = 0; j < electrodeRep.itemAt(i).elec.children.length; j++) {
                 currElec = electrodeRep.itemAt(i).elec.children[j].basicE;
+
                 for (var k = 0; k < currElec.rowCount; k++) {
+
                     for (var l = 0; l < currElec.columnCount; l++) {
+
                         switch (comboBoxValue) {
                         case 0: // only default name
                             currElec.rowRep.itemAt(k).colRep.itemAt(l).name = currElec.rowRep.itemAt(k).colRep.itemAt(l).defaultName;
@@ -193,10 +206,14 @@ ElectrodePlacementForm {
         }
     }
 
+    // implement export image button
     function confirm() {
+        // check if opened dialog, close it
         if(loader.sourceComponent === fileComp) {
             loader.sourceComponent = undefined
         }
+
+        // open file dialog
         loader.sourceComponent = fileComp;
     }
 
@@ -249,6 +266,7 @@ ElectrodePlacementForm {
     }
 
     Loader {
+        // loader for file dialog
         id: loader
     }
 

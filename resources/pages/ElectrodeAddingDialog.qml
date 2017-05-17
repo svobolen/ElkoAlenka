@@ -3,6 +3,7 @@ import QtQuick 2.7
 ElectrodeAddingDialogForm {
 
     addDialog.onAccepted: {
+        // add dialog to electrode manager
         addElectrode(columnSpinBox.value, rowSpinBox.value)
         addDialog.close()
         setDefaultValues()

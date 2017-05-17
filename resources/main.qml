@@ -19,7 +19,7 @@ Page {
 
     signal switchToAlenka()
     signal exit()
-    signal saveSession(string images, var minMax, string electrodes)
+    signal saveSession(string images, var minMax, string electrodes, string tracks)
     signal saving()
 
 
@@ -42,44 +42,79 @@ Page {
         page.visible = true
     }
 
-    function loadSession(images, minMax, electrodes) {
-//        console.log(electrodes.length)
-        // ({ rows: 1, columns: 1, links: listmodel, eParent: "root", eX: 0, eY:0, eZ: 0, eScale: 1, eRotation: 0})
+    function loadSession(images, minMax, electrodes, tracks) {
+        //        console.log(electrodes.length)
+        // ListElement { rows: 1, columns: 1, links: listmodel, eParent: "root", eX: 0, eY:0, eZ: 0, eScale: 1, eRotation: 0}
+        // ListElement {electrodeNumber: defaultName, wave: name, spikes: 0})
 
-        for (var i = 0; i < electrodes.length; i++) {
-            var JsonString = electrodes[i]
-            var JsonObject= JSON.parse(JsonString);
+        electrodePlacementMain.images = images
+        electrodePlacementMain.minSpikes = minMax[0]
+        electrodePlacementMain.maxSpikes = minMax[1]
+        electrodePlacementMain.customMinSpikes = minMax[2]
+        electrodePlacementMain.customMaxSpikes = minMax[3]
+
+        var JsonObjectArray= JSON.parse(electrodes);
+
+        for (var i = 0; i < JsonObjectArray.length; i++) {
+            var JsonObject= JsonObjectArray[i];
 
             //retrieve values from JSON again
-            var aString = JsonObject.rows;
-            var bString = JsonObject.columns;
+            var rows = JsonObject.rows;
+            var columns = JsonObject.columns;
             var eparent = JsonObject.eParent;
             var ex = JsonObject.eX
             var ey = JsonObject.eY
             var ez = JsonObject.eZ
             var escale = JsonObject.eScale
             var eRotation = JsonObject.eRotation
-            var spikes = JsonObject.links
 
-//            console.log(aString);
-//            console.log(bString);
+            electrodePlacementMain.electrodes.append({ rows: rows, columns: columns, links: listmodel, eParent: eparent, eX: ex, eY:ey, eZ: ez, eScale: escale, eRotation: eRotation})
+//            console.log(rows + "x" + columns);
 //            console.log(eparent)
-//            console.log(ex)
-//            console.log(ey)
-//            console.log(ez)
+//            console.log(ex + ", " + ey + ", " + ex)
 //            console.log(escale)
 //            console.log(eRotation)
-//            console.log(spikes)
 //            console.log("")
+        }
+
+        var JsonObjectArraySpikes = JSON.parse(tracks)
+
+        for (var j = 0; j < JsonObjectArraySpikes.length; j++) {
+            var JsonObjectSpikes = JsonObjectArraySpikes[j];
+
+            //retrieve values from JSON again
+            var trackName = JsonObjectSpikes.wave;
+            var elecNumber = JsonObjectSpikes.electrodeNumber
+            var spikesCount = JsonObjectSpikes.spikes
+            var electrodeId = JsonObjectSpikes.electrodeID
+
+            console.log("electrode num. " + electrodeId)
+            console.log(trackName + " " + elecNumber + " " + spikesCount)
+            console.log("")
         }
     }
 
-    function setDataForSave() {
+    function setElectrodeDataForSave() {
         var electrodesData = []
         for (var i = 0; i < electrodePlacementMain.electrodes.count; i++) {
-            electrodesData[i] = JSON.stringify(electrodePlacementMain.electrodes.get(i))
+            electrodesData[i] = electrodePlacementMain.electrodes.get(i)
         }
-        return electrodesData
+        return JSON.stringify(electrodesData)
+    }
+
+    function setTrackDataForSave() {
+        var tracksData = []
+        var arrayindex = 0
+        for (var i = 0; i < electrodePlacementMain.electrodes.count; i++) {
+
+            for (var j = 0; j < electrodePlacementMain.electrodes.get(i).links.count; j++) {
+
+                electrodePlacementMain.electrodes.get(i).links.setProperty(j, "electrodeID", i)
+                tracksData[arrayindex] = electrodePlacementMain.electrodes.get(i).links.get(j)
+                arrayindex++
+            }
+        }
+        return JSON.stringify(tracksData)
     }
 
     header: ToolBar {
@@ -171,11 +206,13 @@ Page {
                         onTriggered: {
 
                             window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], setDataForSave())
+                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
+                                               setElectrodeDataForSave(), setTrackDataForSave())
 
                             window.loadSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes], setDataForSave())
-//                            window.exit()
+                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
+                                               setElectrodeDataForSave(),setTrackDataForSave())
+                            //                            window.exit()
                         }
                     }
                 }
@@ -387,6 +424,7 @@ Page {
         id: xmlModels
         sourcePath: file
     }
+
     //    onFileUpdatedChanged: {
     //        console.log(fileUpdated)
     //        if (fileUpdated) {

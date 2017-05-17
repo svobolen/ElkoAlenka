@@ -4,11 +4,13 @@ import QtQuick.Controls.Universal 2.1
 DragTrackForm {
 
     mouseArea.onReleased: {
+        // check if dropped at target, if not reset to root
         mouseArea.parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
     }
 
     mouseArea.onPressed: {
         if (mouseArea.parent !== root) {
+            // when drag, set to default state
             mouseArea.parent.alreadyContainsDrag = false
             mouseArea.parent.name = mouseArea.parent.defaultName
             mouseArea.parent.trackName = ""
@@ -20,6 +22,7 @@ DragTrackForm {
 
     mouseArea.onParentChanged: {
         if (mouseArea.parent !== root && mouseArea.parent != null) {
+            // set parents properties when contains drag
             mouseArea.parent.alreadyContainsDrag = true
             mouseArea.parent.name = trackName
             mouseArea.parent.trackName = trackName
@@ -39,8 +42,8 @@ DragTrackForm {
             target: tile
             parent: root
         }
-        //for moving with mouse
         AnchorChanges {
+            //for moving with mouse
             target: tile
             anchors.verticalCenter: undefined
             anchors.horizontalCenter: undefined
