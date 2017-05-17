@@ -21,7 +21,7 @@ Page {
     signal exit()
     signal saveSession(string images, var minMax, string electrodes, string tracks)
     signal saving()
-
+    signal exportDialog()
 
     property string file: filePath
     //    property bool fileUpdated: filePathUpdated
@@ -115,6 +115,17 @@ Page {
             }
         }
         return JSON.stringify(tracksData)
+    }
+
+    function takeScreenshot(filePath) {
+        electrodePlacementMain.grabToImage(function(result) {
+            if (result.saveToFile(filePath)){
+                console.log("Screenshot has been saved to " + filePath);
+                dialog.open();
+            } else {
+                console.error('Unknown error saving to ', filePath);
+            }
+        });
     }
 
     header: ToolBar {
