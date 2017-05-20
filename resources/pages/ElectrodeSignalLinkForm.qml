@@ -7,7 +7,7 @@ Controls.SplitView {
     id: electrodeSignalLink
 
     property string name: qsTr("Link Signal with Electrode")
-    property ListModel electrodes: ListModel {}
+    property ListModel electrodes: ListModel {} //only rows and columns
     property int maxSpikes: 0
     property int minSpikes: 0
 

@@ -25,8 +25,7 @@ Controls.SplitView {
     property alias statisticsTable: statisticsTable
 
     property string name: qsTr("Electrode Placement")
-    property int zHighest: 2
-    property int currIndex: 1
+    property int zHighest: 0
     property bool zoomEnabled: false
     property var images: []
     property int minSpikes: 0
@@ -40,12 +39,6 @@ Controls.SplitView {
     onMinSpikesChanged: customMinSpikes = minSpikes
     onMaxSpikesChanged: customMaxSpikes = maxSpikes
     onImagesChanged: reset()
-    onCurrIndexChanged: {
-        if (currIndex > 0 && imageArea.children.length > currIndex) {
-            imageArea.children[currIndex].z = ++zHighest    //clicked electrode on the top
-        }
-    }
-
 
     DropArea {
         id: imageArea
@@ -324,7 +317,7 @@ Controls.SplitView {
                                 basicE.rotation: eRotation
                                 basicE.scale: eScale
 
-                                basicE.onParentChanged: electrodes.setProperty(index, "eParent", basicE.parent === root ? "root" : "imageArea")
+                                basicE.onParentChanged: electrodes.setProperty(index, "eParent", basicE.parent === imageArea ? "imageArea" : "root")
                                 basicE.onXChanged: electrodes.setProperty(index, "eX", basicE.x)
                                 basicE.onYChanged: electrodes.setProperty(index, "eY", basicE.y)
                                 basicE.onZChanged: electrodes.setProperty(index, "eZ", basicE.z)

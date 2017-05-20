@@ -6,6 +6,15 @@ DragTrackForm {
     mouseArea.onReleased: {
         // check if dropped at target, if not reset to root
         mouseArea.parent = (tile.Drag.target === null || tile.Drag.target.alreadyContainsDrag) ?  root : tile.Drag.target
+
+        if (mouseArea.parent !== root && mouseArea.parent != null) {
+            // set parents properties when contains drag
+            mouseArea.parent.alreadyContainsDrag = true
+            mouseArea.parent.name = trackName
+            mouseArea.parent.trackName = trackName
+            mouseArea.parent.trackId = trackId
+            tile.color = Universal.color(Universal.Cyan)
+        }
     }
 
     mouseArea.onPressed: {

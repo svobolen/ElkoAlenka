@@ -14,6 +14,34 @@ Item {
 
     width: columnCount*size; height: rowCount*size;
 
+    function deleteLinkedTracks() {
+
+        // clear linked tracks from electrode
+        linkedTracks.clear()
+
+        for (var i = 0; i < rowCount; i++) {
+            for (var j = 0; j < columnCount; j++) {
+                if (rowRep.itemAt(i).colRep.itemAt(j).trackName !== "") {
+                    var currContact = rowRep.itemAt(i).colRep.itemAt(j)
+                    currContact.name = currContact.defaultName
+                    currContact.nameFont.bold = false
+                    currContact.trackName = ""
+                    currContact.alreadyContainsDrag = false
+                    currContact.trackId = -1
+                    currContact.spikes = 0
+                }
+            }
+        }
+    }
+
+    // return column and row index of electrode with electrodeNumber
+    function getPositionIndexes(electrodeNumber) {
+        var rowNum = (rowCount === 1) ? 1 : rowCount - Math.floor(electrodeNumber / rowCount)
+        var columnNum = electrodeNumber % columnCount
+        if (columnNum === 0) columnNum = columnCount
+        return [rowNum - 1, columnNum - 1]
+    }
+
     Rectangle {
         id: electrode
         width: columnCount*size; height: rowCount*size; radius: size/2
@@ -49,6 +77,7 @@ Item {
                             property int spikes: 0
 
                             property alias name: electrodeText.text
+                            property alias nameFont: electrodeText.font
                             property alias colorFill: dropRectangle.color
 
 

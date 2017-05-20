@@ -83,9 +83,9 @@ Item {
                     drag.target: electrode
                     scrollGestureEnabled: false  // 2-finger-flick gesture should pass through to the Flickable
                     onPressed: {
-                        electrodePlacement.currIndex = indexNumber
                         tempX = Math.round(electrode.x)
                         tempY = Math.round(electrode.y)
+                        electrode.z = ++electrodePlacementMain.zHighest
                     }
                     onWheel: {
                         if (draggable) {
@@ -105,43 +105,41 @@ Item {
                     }
                     onReleased: {
                         if (tempX !== Math.round(electrode.x) || tempY !== Math.round(electrode.y)) {
-                                var previousParent = electrode.parent
-                                electrode.parent = (electrode.Drag.target === null) ?  root : electrode.Drag.target
+                            var previousParent = electrode.parent
+                            electrode.parent = (electrode.Drag.target === null) ?  root : electrode.Drag.target
 
-                                if (previousParent == root & electrode.parent != root ) {
-                                    electrode.x = electrode.x + electrode.parent.width
-                                            + electrodePlacement.electrodeRep.itemAt(root.repeaterIndex).elec.x
-                                            + electrodePlacement.column.padding
-                                            - electrodePlacement.imageArea.x / electrodePlacement.imageArea.scale
+                            if (previousParent == root & electrode.parent != root ) {
+                                electrode.x = electrode.x + electrode.parent.width
+                                        + electrodePlacement.electrodeRep.itemAt(root.repeaterIndex).elec.x
+                                        + electrodePlacement.column.padding
+                                        - electrodePlacement.imageArea.x / electrodePlacement.imageArea.scale
 
-                                    electrode.y = electrode.y + root.yPosition - electrodePlacement.column.spacing
-                                            - electrodePlacement.column.height * electrodePlacement.scrollIndicator.position
-                                            - electrodePlacement.imageArea.y / electrodePlacement.imageArea.scale
+                                electrode.y = electrode.y + root.yPosition - electrodePlacement.column.spacing
+                                        - electrodePlacement.column.height * electrodePlacement.scrollIndicator.position
+                                        - electrodePlacement.imageArea.y / electrodePlacement.imageArea.scale
 
-                                    electrode.scale = electrode.scale / electrodePlacement.imageArea.scale
-                                    indexNumber = electrodePlacement.imageArea.children.length - 1
-                                    electrodePlacement.currIndex = indexNumber
+                                electrode.scale = electrode.scale / electrodePlacement.imageArea.scale
 
-                                } else if (electrode.parent == root){
-                                    electrode.x = 0
-                                    electrode.y = 0
-                                    electrode.scale = 1
-                                    electrode.rotation = 0
-                                } //else nothing (just moving with mouse)
+                            } else if (electrode.parent == root){
+                                electrode.x = 0
+                                electrode.y = 0
+                                electrode.scale = 1
+                                electrode.rotation = 0
+                            } //else nothing (just moving with mouse)
                         }
                     }
-                    onDoubleClicked: {
-                        menu.open()
-                    }
-
+                    onDoubleClicked: menu.open()
                 }
             }
+
             Menu {
                 id: menu
                 x: root.width/2
                 y: root.height/2
                 width: 150
                 closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent | Popup.CloseOnEscape
+                onOpened: elecTimer.start()
+                onClosed: elecTimer.stop()
                 MenuItem {
                     text: qsTr("Fix position")
                     onTriggered: {
@@ -204,9 +202,14 @@ Item {
                 }
                 MenuItem {
                     text: qsTr("Close menu")
-                    onTriggered:
-                        menu.close()
+                    onTriggered: menu.close()
                 }
+            }
+
+            Timer {
+                id: elecTimer
+                interval: 5000
+                onTriggered: menu.close()
             }
         }
     }

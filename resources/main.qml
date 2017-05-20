@@ -24,7 +24,7 @@ Page {
     signal exportDialog()
 
     property string file: filePath
-    //    property bool fileUpdated: filePathUpdated
+    property string previousFile: ""
 
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
@@ -33,6 +33,52 @@ Page {
     property alias electrodeManagerMain: electrodeManagerMain
     property alias signalLinkMain: electrodeSignalLinkMain
     property alias electrodePlacementMain: electrodePlacementMain
+
+    onFileChanged: {
+
+        if (file.substring(0, file.length - 1) === previousFile) { // file is same (just different index at the end)
+         //   zkontrolovat jestli jsou vsechny tracky
+
+            xmlModels.sourcePath = file
+            electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
+
+            for (var m = 0; m < signalLinkMain.elecRep.count; m++) {
+                var currElec = signalLinkMain.elecRep.itemAt(m).bElectrode
+                for (var l = 0; l < currElec.linkedTracks.count; l++) {
+                    console.log(currElec.linkedTracks.get(l).wave)
+                    console.log(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[0])
+                    console.log(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[1])
+                    signalLinkMain.dragRep.itemAt(0).mouseArea.parent
+                            = currElec.rowRep.itemAt(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[0])
+                    .colRep.itemAt(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[1])
+                    console.log(signalLinkMain.dragRep.itemAt(0).mouseArea.parent)
+                }
+            }
+
+            // ty co se odstranily - smazat z signallink a el.placement
+            // zbytek priradit je znovu
+            // novy se pridaji do seznamu na prirazeni
+
+
+        } else { //totally different file
+
+         //  delete linked tracks in Signal Link
+            for (var i = 0; i < signalLinkMain.elecRep.count; i++) {
+                signalLinkMain.elecRep.itemAt(i).bElectrode.deleteLinkedTracks()
+            }
+
+            //  delete linked tracks in Electrode Placement
+            for (var j = 0; j < electrodePlacementMain.electrodeRep.count; j++) {
+                for (var k = 0; k < electrodePlacementMain.electrodeRep.itemAt(j).elec.children.length; k++) { //for all electrodes (even same)
+                    electrodePlacementMain.electrodeRep.itemAt(j).elec.children[k].basicE.deleteLinkedTracks()
+                }
+            }
+
+            xmlModels.sourcePath = file
+            electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
+        }
+        previousFile = file.substring(0, file.length - 1)
+    }
 
     function changePage(pageIndex, page) {
         listView.currentIndex = pageIndex
