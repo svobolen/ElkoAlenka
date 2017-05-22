@@ -42,7 +42,6 @@ Controls.SplitView {
                         trackName: label.replace(/\s+/g, '') //without whitespaces
                         trackId: index
                     }
-                    onCountChanged: if (count > 0) completed++
                 }
             }
         }

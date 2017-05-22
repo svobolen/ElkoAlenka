@@ -271,6 +271,15 @@ Controls.SplitView {
                         padding: 5
                         spacing: 5
 
+                        function addNewElectrode() {
+                            var component = Qt.createComponent("qrc:/pages/Electrode.qml")
+                            var sameElec = component.createObject(elecItem, {"columnCount": columns, "rowCount": rows, "linkList": links,
+                                                                      "color": elecItem.children[elecItem.children.length-1].basicE.color,
+                                                                      "yPosition": elecItem.getYCoordinate(index)});
+                            console.log("Copy of electrode " + rows + "x" + columns + " added.")
+
+                        }
+
                         Label {
                             text: rows + "x" + columns
                             anchors.verticalCenter: parent.verticalCenter
@@ -284,14 +293,6 @@ Controls.SplitView {
                             highlighted: true
                             anchors.verticalCenter: parent.verticalCenter
                             onClicked: addNewElectrode()
-                            function addNewElectrode() {
-                                var component = Qt.createComponent("qrc:/pages/Electrode.qml")
-                                var sameElec = component.createObject(elecItem, {"columnCount": columns, "rowCount": rows, "linkList": links,
-                                                                          "color": elecItem.children[elecItem.children.length-1].basicE.color,
-                                                                          "yPosition": elecItem.getYCoordinate(index)});
-                                console.log("New view on electrode " + rows + "x" + columns + " added.")
-
-                            }
                         }
 
                         Item {
@@ -335,7 +336,7 @@ Controls.SplitView {
                                 basicE.onYChanged: electrodes.setProperty(index, "eY", basicE.y)
                                 basicE.onZChanged: electrodes.setProperty(index, "eZ", basicE.z)
                                 basicE.onRotationChanged: electrodes.setProperty(index, "eRotation", basicE.rotation)
-                                basicE.onScaleChanged: electrodes.setProperty(index, "eScale", basicE.scale)
+                                basicE.onScaleChanged:  electrodes.setProperty(index, "eScale", basicE.scale)
                             }
                         }
                     }

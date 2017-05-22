@@ -22,7 +22,6 @@ Item {
         query: "/document/montageTable/montage/eventTable/event"
 
         XmlRole { name: "channel"; query: "@channel/string()" }
-        onCountChanged: if (count > 0) completed++
     }
 
     function countSpikes() {
