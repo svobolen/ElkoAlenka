@@ -93,6 +93,8 @@ Controls.SplitView {
             }
         }
 
+
+
         Dialog {
             id: statisticsTable
             modal: true
@@ -100,43 +102,54 @@ Controls.SplitView {
             x: (window.width - width) / 2
             y: 10
             width: window.width / 3
-            height: parent.height - 20
+            //            height: parent.height - 20
+            contentHeight: window.height - window.footer.height - window.header.height
             title: "<b>Statistics table</b>"
-            standardButtons: Dialog.Ok | Dialog.Cancel
+            standardButtons: Dialog.Ok
 
             Flickable {
-                contentHeight: dialogColumn.height
-                contentWidth: 1/3 * window.width
+                id: flickable
                 boundsBehavior: Flickable.OvershootBounds
+                anchors.fill: parent
+                contentHeight: dialogColumn.height
+                clip: true
 
-                Item {
-                    width: 1/4 * window.width
-                    height: statisticsTable.height - statisticsTable.header.height - statisticsTable.footer.height
-                   // color: "white"
+                Rectangle {
+                    anchors.fill: parent
+                    color: "white"
+                }
 
-                    Column {
-                        id: dialogColumn
-                        spacing: 10
-                        Repeater {
-                            model: electrodeSpikesModel
+                Column {
+                    id: dialogColumn
+                    width: parent.width
+                    spacing: 10
 
-                            Row {
-                                spacing: 20
+                    Repeater {
+                        model: electrodeSpikesModel
 
-                                Label {
-                                    text: model.name
-                                    width: statisticsTable.width / 3
-                                }
+                        Row {
+                            spacing: 20
+                            leftPadding: 50
 
-                                Label {
-                                    text: model.spikes
-                                    width: statisticsTable.width / 3
-                                }
+                            Label {
+                                text: model.name
+                                width: statisticsTable.width / 3
+                            }
+
+                            Label {
+                                text: model.spikes
+                                width: statisticsTable.width / 3
                             }
                         }
                     }
                 }
-                ScrollIndicator.vertical: ScrollIndicator { }
+                ScrollIndicator.vertical: ScrollIndicator {
+                    parent: statisticsTable.contentItem
+                    anchors.top: flickable.top
+                    anchors.bottom: flickable.bottom
+                    anchors.right: parent.right
+                    anchors.rightMargin: -statisticsTable.rightPadding + 1
+                }
             }
         }
     }

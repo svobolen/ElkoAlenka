@@ -92,7 +92,10 @@ ElectrodePlacementForm {
 
 
 
-                            } else {
+
+
+
+                            } else if (j === 0){
                                 electrodeSpikesModel.append({"name": currElec.rowRep.itemAt(k).colRep.itemAt(l).name, "spikes": currElecSpikes})
                             }
                         }

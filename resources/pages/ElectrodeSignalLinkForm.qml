@@ -87,9 +87,5 @@ Controls.SplitView {
         ScrollIndicator.horizontal: ScrollIndicator { }
     }
 
-    Button {
-        text: "Refresh"
-        onClicked: connectSignals()
-    }
 }
 

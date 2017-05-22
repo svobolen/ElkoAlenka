@@ -234,6 +234,15 @@ Page {
                     onOpened: menuTimer.start()
                     onClosed: menuTimer.stop()
 
+
+                    MenuItem {
+                        visible: listView.currentIndex === 2
+                        text: qsTr("Refresh")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
+                        onTriggered: electrodeSignalLinkMain.connectSignals()
+                    }
                     MenuItem {
                         text: qsTr("Close menu")
                         font.pixelSize: 30
@@ -253,21 +262,16 @@ Page {
                         width: parent.width
                         height: 100
                         onTriggered: {
-
-                            window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
-                                               setElectrodeDataForSave(), setTrackDataForSave())
-
-                            window.loadSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
-                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
-                                               setElectrodeDataForSave(),setTrackDataForSave())
-                            //                            window.exit()
+//                            window.saveSession(electrodePlacementMain.images, [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+//                                                                               electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
+//                                               setElectrodeDataForSave(), setTrackDataForSave())
+                            window.exit()
                         }
                     }
                 }
                 Timer {
                     id: menuTimer
-                    interval: 5000
+                    interval: 3000
                     onTriggered: optionsMenu.close()
                 }
             }
@@ -379,7 +383,7 @@ Page {
         }
     }
 
-    StackView {     //inicializace stacku, uvodni stranka
+    StackView {
         id: stackView
         anchors.fill: parent
 
@@ -407,12 +411,9 @@ Page {
                 }
             }
 
-            function confirm() {
-                changePage(0, imageManagerMain)
-            }
+            function confirm() {  changePage(0, imageManagerMain) }
 
-            function reset() { // do nothing
-            }
+            function reset() {} // do nothing on this page
         }
     }
 
