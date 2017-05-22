@@ -36,6 +36,7 @@ ElectrodeManagerForm {
                         }
                     }
                     signalLinkMain.electrodes.remove(k)
+                    electrodePlacementMain.electrodes.remove(k)
                     k--
                 }
             }
@@ -43,11 +44,16 @@ ElectrodeManagerForm {
             //append newly chosen electrodes
             for (var l = 0; l < chosenElectrodesList.count; l++) {
                 signalLinkMain.electrodes.append(chosenElectrodesList.get(l))
+                electrodePlacementMain.electrodes.append({ rows: chosenElectrodesList.get(l).rows, columns: chosenElectrodesList.get(l).columns,
+                                                             links: emptyListModel, eParent: "root", eX: 0, eY:0, eZ: 0, eScale: 1, eRotation: 0})
             }
 
             changePage(2, signalLinkMain)
         }
     }
+
+    // empty list model for links
+    ListModel { id: emptyListModel }
 
     function find( element, model ) {
         for(var i = 0; i < model.count; ++i) {

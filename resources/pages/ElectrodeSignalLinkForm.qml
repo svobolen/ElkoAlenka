@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4 as Controls
 import QtQuick.Controls 2.1
+import "../+universal"
 
 Controls.SplitView {
     id: electrodeSignalLink
@@ -10,6 +11,8 @@ Controls.SplitView {
     property ListModel electrodes: ListModel {} //only rows and columns
     property int maxSpikes: 0
     property int minSpikes: 0
+    property bool refreshNeeded: false
+    readonly property bool isActive: window.listView.currentIndex == 2
 
     property alias elecRep: elecRep
     property alias dragRep: dragRep
@@ -39,6 +42,7 @@ Controls.SplitView {
                         trackName: label.replace(/\s+/g, '') //without whitespaces
                         trackId: index
                     }
+                    onCountChanged: if (count > 0) completed++
                 }
             }
         }
@@ -83,4 +87,9 @@ Controls.SplitView {
         ScrollIndicator.horizontal: ScrollIndicator { }
     }
 
+    Button {
+        text: "Refresh"
+        onClicked: connectSignals()
+    }
 }
+

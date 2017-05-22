@@ -17,7 +17,7 @@ Item {
     function deleteLinkedTracks() {
 
         // clear linked tracks from electrode
-        linkedTracks.clear()
+        if (linkedTracks != null) linkedTracks.clear()
 
         for (var i = 0; i < rowCount; i++) {
             for (var j = 0; j < columnCount; j++) {
@@ -36,10 +36,23 @@ Item {
 
     // return column and row index of electrode with electrodeNumber
     function getPositionIndexes(electrodeNumber) {
-        var rowNum = (rowCount === 1) ? 1 : rowCount - Math.floor(electrodeNumber / rowCount)
+        var rowNum = rowCount - Math.floor(electrodeNumber / columnCount)
         var columnNum = electrodeNumber % columnCount
-        if (columnNum === 0) columnNum = columnCount
-        return [rowNum - 1, columnNum - 1]
+        if (columnNum === 0) {
+            columnNum = columnCount
+        } else if (rowNum !== 0){
+            rowNum = rowNum - 1
+        }
+
+        return [rowNum, columnNum - 1]
+    }
+
+    function setLinkedTracks() {
+        for (var i = 0; i < rowCount; i++) {
+            for (var j = 0; j < columnCount; j++) {
+                rowRep.itemAt(i).colRep.itemAt(j).setLinkedTrack()
+            }
+        }
     }
 
     Rectangle {
@@ -131,7 +144,7 @@ Item {
                                             }
                                         }
                                     } else {
-                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: 0, electrodeID: -1} )
+                                        linkedTracks.append( { electrodeNumber: defaultName, wave: name, spikes: spikes, electrodeID: -1} )
                                     }
                                 }
                             }
@@ -144,9 +157,19 @@ Item {
                                 }
                             }
 
-                            Component.onCompleted: {
-                                if (linkedTracks !== null) {
-                                    nameToChange = false
+                            Component.onCompleted: setLinkedTrack()
+
+                            function setLinkedTrack() {
+                                //set to default state
+                                nameToChange = false
+                                name = defaultName
+                                trackName = ""
+//                                spikes = 0
+                                electrodeText.font.bold = false
+                                colorFill = "white"
+
+                                //link tracks
+                                if (linkedTracks != null) {
                                     for (var i = 0; i < linkedTracks.count; i++) {
                                         if (linkedTracks.get(i).electrodeNumber === defaultName) {
                                             name = linkedTracks.get(i).wave
@@ -156,9 +179,16 @@ Item {
                                         }
                                     }
                                 }
-
                                 nameToChange = true
+                            }
 
+                            function setDefault() {
+                                name = defaultName
+                                trackName = ""
+                                alreadyContainsDrag = false
+                                spikes = 0
+                                electrodeText.font.bold = false
+                                colorFill = "white"
                             }
                         }
                     }
@@ -170,6 +200,7 @@ Item {
                         border.color: "grey"
                         color: root.color
                     }
+
                     function getIndex() {   //for default electrode name
                         return index + 1
                     }

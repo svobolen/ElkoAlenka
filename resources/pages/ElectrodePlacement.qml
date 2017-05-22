@@ -58,7 +58,7 @@ ElectrodePlacementForm {
 
                     for (var l = 0; l < currElec.columnCount; l++) {
 
-                        if(currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes !== 0) {
+                        if(currElec.rowRep.itemAt(k).colRep.itemAt(l).trackName !== "") {
 
                             currElecSpikes = currElec.rowRep.itemAt(k).colRep.itemAt(l).spikes
 
@@ -91,8 +91,8 @@ ElectrodePlacementForm {
                                 statisticsButton.highlighted = true
 
 
-                            } else {
 
+                            } else {
                                 electrodeSpikesModel.append({"name": currElec.rowRep.itemAt(k).colRep.itemAt(l).name, "spikes": currElecSpikes})
                             }
                         }

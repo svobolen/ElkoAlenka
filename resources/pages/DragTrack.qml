@@ -13,6 +13,7 @@ DragTrackForm {
             mouseArea.parent.name = trackName
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
+            mouseArea.parent.spikes = spikes
             tile.color = Universal.color(Universal.Cyan)
         }
     }
@@ -36,6 +37,8 @@ DragTrackForm {
             mouseArea.parent.name = trackName
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
+            mouseArea.parent.spikes = spikes
+            console.log(trackName + " " + mouseArea.parent.spikes)
             tile.color = Universal.color(Universal.Cyan)
         }
     }
@@ -56,6 +59,12 @@ DragTrackForm {
             target: tile
             anchors.verticalCenter: undefined
             anchors.horizontalCenter: undefined
+        }
+    }
+
+    onSpikesChanged: {
+        if (mouseArea.parent !== root) {
+            mouseArea.parent.spikes = spikes
         }
     }
 }

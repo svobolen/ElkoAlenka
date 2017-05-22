@@ -41,10 +41,4 @@ Item {
             }
         }
     }
-
-    onSpikesChanged: {
-        if (mouseArea.parent !== root) {
-            mouseArea.parent.spikes = spikes
-        }
-    }
 }

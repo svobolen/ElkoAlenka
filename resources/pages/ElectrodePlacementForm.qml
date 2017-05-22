@@ -109,10 +109,10 @@ Controls.SplitView {
                 contentWidth: 1/3 * window.width
                 boundsBehavior: Flickable.OvershootBounds
 
-                Rectangle {
+                Item {
                     width: 1/4 * window.width
                     height: statisticsTable.height - statisticsTable.header.height - statisticsTable.footer.height
-                    color: "white"
+                   // color: "white"
 
                     Column {
                         id: dialogColumn

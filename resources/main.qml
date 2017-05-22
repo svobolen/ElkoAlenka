@@ -25,44 +25,36 @@ Page {
 
     property string file: filePath
     property string previousFile: ""
+    property int completed: 0
 
     property alias confirmButton: confirmButton
     property alias resetButton: resetButton
     property alias xmlModels: xmlModels
+    property alias listView: listView
     property alias imageManagerMain: imageManagerMain
     property alias electrodeManagerMain: electrodeManagerMain
     property alias signalLinkMain: electrodeSignalLinkMain
     property alias electrodePlacementMain: electrodePlacementMain
 
+    // read xml after xmlModels and signalLinkMain are initialized
+//    onCompletedChanged: if (completed === 2) xmlModels.countSpikes()
+
     onFileChanged: {
 
+        if (previousFile === "") signalLinkMain.refreshNeeded = true
+
         if (file.substring(0, file.length - 1) === previousFile) { // file is same (just different index at the end)
-         //   zkontrolovat jestli jsou vsechny tracky
+
+            xmlModels.sourcePath = file
+            electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
+            signalLinkMain.refreshNeeded = true
+
+        } else { //totally different file
 
             xmlModels.sourcePath = file
             electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
 
-            for (var m = 0; m < signalLinkMain.elecRep.count; m++) {
-                var currElec = signalLinkMain.elecRep.itemAt(m).bElectrode
-                for (var l = 0; l < currElec.linkedTracks.count; l++) {
-                    console.log(currElec.linkedTracks.get(l).wave)
-                    console.log(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[0])
-                    console.log(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[1])
-                    signalLinkMain.dragRep.itemAt(0).mouseArea.parent
-                            = currElec.rowRep.itemAt(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[0])
-                    .colRep.itemAt(currElec.getPositionIndexes(currElec.linkedTracks.get(l).electrodeNumber)[1])
-                    console.log(signalLinkMain.dragRep.itemAt(0).mouseArea.parent)
-                }
-            }
-
-            // ty co se odstranily - smazat z signallink a el.placement
-            // zbytek priradit je znovu
-            // novy se pridaji do seznamu na prirazeni
-
-
-        } else { //totally different file
-
-         //  delete linked tracks in Signal Link
+            //  delete linked tracks in Signal Link
             for (var i = 0; i < signalLinkMain.elecRep.count; i++) {
                 signalLinkMain.elecRep.itemAt(i).bElectrode.deleteLinkedTracks()
             }
@@ -73,11 +65,10 @@ Page {
                     electrodePlacementMain.electrodeRep.itemAt(j).elec.children[k].basicE.deleteLinkedTracks()
                 }
             }
-
-            xmlModels.sourcePath = file
-            electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
         }
         previousFile = file.substring(0, file.length - 1)
+//        if (listView.currentIndex === 3) changePage(2, signalLinkMain)
+
     }
 
     function changePage(pageIndex, page) {
@@ -86,6 +77,7 @@ Page {
         stackView.replace(page)
         page.enabled = true
         page.visible = true
+        listView.currentIndex = pageIndex
     }
 
     function loadSession(images, minMax, electrodes, tracks) {
@@ -374,10 +366,11 @@ Page {
             model: [ imageManagerMain, electrodeManagerMain, electrodeSignalLinkMain, electrodePlacementMain, alenka ]
             ScrollIndicator.vertical: ScrollIndicator { }
 
-            onCurrentIndexChanged: {
+            onCurrentIndexChanged: {               
                 if (currentIndex == 3) {
                     confirmButton.text = qsTr("Export image")
                     confirmButton.width = 300
+
                 } else if (confirmButton.text !== qsTr("Next >")){
                     confirmButton.text = qsTr("Next >")
                     confirmButton.width = 200
@@ -482,14 +475,6 @@ Page {
         sourcePath: file
     }
 
-    //    onFileUpdatedChanged: {
-    //        console.log(fileUpdated)
-    //        if (fileUpdated) {
-    //            xmlModels.sourcePath = file
-    //        }
-    //        fileUpdated = false
-    //    }
-
     Pages.ImageManager { id: imageManagerMain; enabled: false; visible: false }
 
     Pages.ElectrodeManager {id: electrodeManagerMain; enabled: false; visible: false }
@@ -499,4 +484,6 @@ Page {
     Pages.ElectrodePlacement {id: electrodePlacementMain; enabled: false; visible: false }
 
     Item { id: alenka; property string name: qsTr("Switch to Alenka"); property bool switchElement: true }
+
+
 }
