@@ -19,8 +19,7 @@ Page {
 
     signal switchToAlenka()
     signal exit()
-    signal saveSession (var session) //(string images, var minMax, string electrodes, string tracks)
-    signal saving()
+    signal saveSession(string session)
     signal exportDialog()
 
     property string file: filePath
