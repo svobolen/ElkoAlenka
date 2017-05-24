@@ -39,6 +39,8 @@ ElectrodeSignalLinkForm {
                 dragRep.itemAt(i).tile.color = "white"
                 dragRep.itemAt(i).mouseArea.parent = dragRep.itemAt(i).root
             }
+            dragRep.itemAt(i).mouseArea.x = 0
+            dragRep.itemAt(i).mouseArea.y = 0
         }
     }
 

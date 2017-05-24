@@ -22,6 +22,7 @@ Page {
     signal saveSession(string session)
     signal exportDialog()
 
+    property bool sessionLoaded: false
     property string file: filePath
     property string previousFile: ""
     property ListModel sameElecData: ListModel{}    //electrodeId, parent, x, y, z, scale, rotation
@@ -50,21 +51,23 @@ Page {
             xmlModels.sourcePath = file
             electrodeSignalLinkMain.dragRep.model = xmlModels.trackModel
 
-            //  delete linked tracks in Signal Link
-            for (var i = 0; i < signalLinkMain.elecRep.count; i++) {
-                signalLinkMain.elecRep.itemAt(i).bElectrode.deleteLinkedTracks()
-            }
+            if (!sessionLoaded) {
+                //  delete linked tracks in Signal Link
+                for (var i = 0; i < signalLinkMain.elecRep.count; i++) {
+                    signalLinkMain.elecRep.itemAt(i).bElectrode.deleteLinkedTracks()
+                }
 
-            //  delete linked tracks in Electrode Placement
-            for (var j = 0; j < electrodePlacementMain.electrodeRep.count; j++) {
-                for (var k = 0; k < electrodePlacementMain.electrodeRep.itemAt(j).elec.children.length; k++) { //for all electrodes (even same)
-                    electrodePlacementMain.electrodeRep.itemAt(j).elec.children[k].basicE.deleteLinkedTracks()
+                //  delete linked tracks in Electrode Placement
+                for (var j = 0; j < electrodePlacementMain.electrodeRep.count; j++) {
+                    for (var k = 0; k < electrodePlacementMain.electrodeRep.itemAt(j).elec.children.length; k++) { //for all electrodes (even same)
+                        electrodePlacementMain.electrodeRep.itemAt(j).elec.children[k].basicE.deleteLinkedTracks()
+                    }
                 }
             }
         }
         previousFile = file.substring(0, file.length - 1)
         //        if (listView.currentIndex === 3) changePage(2, signalLinkMain)
-
+        sessionLoaded = false
     }
 
     function changePage(pageIndex, page) {
@@ -77,12 +80,19 @@ Page {
     }
 
     function loadSession(session) {
-        // ListElement {electrodeNumber: defaultName, wave: name, spikes: 0})
+
+        sessionLoaded = true
+
+        imageManagerMain.reset()
+        electrodeManagerMain.reset()
+        electrodeSignalLinkMain.electrodes.clear()
+        electrodePlacementMain.electrodes.clear()
 
         var JsonObjectArray = JSON.parse(session)
 
-        //        var images = JsonObjectArray.images
-        //        electrodePlacementMain.images = images
+        // load images
+        var images = JsonObjectArray.images
+        electrodePlacementMain.images = images
 
         // mins a max in electrode placement
         var minMax = JsonObjectArray.minMax
@@ -91,35 +101,33 @@ Page {
         electrodePlacementMain.customMinSpikes = minMax[2]
         electrodePlacementMain.customMaxSpikes = minMax[3]
 
-        // electrodes in electrode placement
-        // TODO electrodes in electrodeManagerMain and electrodeSignalLinkMain
         var electrodeData = JsonObjectArray.electrodeData
-        electrodePlacementMain.electrodes.clear()
 
         for (var i = 0; i < electrodeData.length; i++) {
-            loadedElecs.append(electrodeData[i])
-        }
+            loadedLinks.clear()
+            var currElec = electrodeData[i]
 
-        // link tracks to electrode in electrode placement
-        var trackData = JsonObjectArray.trackData
-        for (var k = 0; k < loadedElecs.count; k++) {
-            console.log("before " + loadedElecs.get(k).links)
-            loadedElecs.setProperty(k, "links", emptyModel)
-            console.log("after " + loadedElecs.get(k).links)
-            for (var j = 0; j < trackData.count; j++) {
-                if (trackData[j].electrodeID === k) {
-                    console.log(trackData[j].trackName)
-                    //                    loadedElecs.get(k).links.append(trackData[j])
-                    // TODO (not neccessary) delete in trackDat after appending; j--
-                }
+            for (var n = 0; n < currElec.links.length; n++) {
+                loadedLinks.append(currElec.links[n])
             }
-        }
 
-        electrodePlacementMain.electrodes = loadedElecs
+            // set electrodes in Electrode Manager
+            electrodeManagerMain.setLoadedElectrode(currElec.rows, currElec.columns);
+
+            // set electrodes in Electrode Signal Link
+            electrodeSignalLinkMain.electrodes.append({rows: currElec.rows, columns: currElec.columns})
+
+            // set electrodes in Electrode Placement
+            electrodePlacementMain.electrodes.append({rows: currElec.rows,
+                                                         columns: currElec.columns,
+                                                         links: loadedLinks,
+                                                         eParent: currElec.eParent,
+                                                         eX: currElec.eX, eY:currElec.eY, eZ: currElec.eZ,
+                                                         eScale: currElec.eScale, eRotation: currElec.eRotation})
+        }
 
         // create same electrodes (copies) in electrode placement
         var sameElectrodeData = JsonObjectArray.sameElectrodeData
-
         for (var l = 0; l < electrodePlacementMain.electrodeRep.count; l++) {
 
             for (var m = 0; m < sameElectrodeData.length; m++) {
@@ -144,14 +152,36 @@ Page {
         }
     }
 
-    ListModel { id: emptyModel }
+    ListModel { id: loadedLinks }
 
-    ListModel { id: loadedElecs }
+    function setImagesForSave() {
+        var images = []
+        for (var i = 0; i < electrodePlacementMain.images.length; i++) {
+            images[i] = electrodePlacementMain.images[i].toString()
+        }
+        return images
+    }
 
     function setElectrodeDataForSave() {
         var electrodesData = []
         for (var i = 0; i < electrodePlacementMain.electrodes.count; i++) {
-            electrodesData[i] = electrodePlacementMain.electrodes.get(i)
+            var currElec = electrodePlacementMain.electrodes.get(i)
+
+            // get links of electrode to array
+            var linkList = []
+            for (var m = 0; m < currElec.links.count; m++) {
+                linkList[m] = ({electrodeNumber: currElec.links.get(m).electrodeNumber,
+                                   wave: currElec.links.get(m).wave,
+                                   spikes: currElec.links.get(m).spikes
+                               })
+            }
+
+            electrodesData[i] = ({rows: currElec.rows,
+                                     columns: currElec.columns,
+                                     links: linkList,
+                                     eParent: currElec.eParent,
+                                     eX: currElec.eX, eY:currElec.eY, eZ: currElec.eZ,
+                                     eScale: currElec.eScale, eRotation: currElec.eRotation})
         }
         return electrodesData
     }
@@ -180,30 +210,38 @@ Page {
         return identicElectrodesData
     }
 
-    function setTrackDataForSave() {
-        var tracksData = []
-        var arrayindex = 0
-        for (var i = 0; i < electrodePlacementMain.electrodes.count; i++) {
-
-            for (var j = 0; j < electrodePlacementMain.electrodes.get(i).links.count; j++) {
-
-                electrodePlacementMain.electrodes.get(i).links.setProperty(j, "electrodeID", i)
-                tracksData[arrayindex] = electrodePlacementMain.electrodes.get(i).links.get(j)
-                arrayindex++
-            }
-        }
-        return tracksData
-    }
-
     function takeScreenshot(filePath) {
         electrodePlacementMain.grabToImage(function(result) {
             if (result.saveToFile(filePath)){
                 console.log("Screenshot has been saved to " + filePath);
+                exportInfo.msg = filePath
+                exportInfo.open()
                 dialog.open();
             } else {
                 console.error('Unknown error saving to ', filePath);
             }
         });
+    }
+
+    Dialog {
+        id: exportInfo
+        modal: true
+        focus: true
+        x: (window.width - width) / 2
+        y: (window.height - height)/6
+        property string msg: ""
+        title: qsTr("<b>Information</b>")
+        standardButtons: Dialog.Ok
+
+        Column {
+            spacing: 20
+            Label {
+                text: "Screenshot has been saved to "
+            }
+            Label {
+                text: exportInfo.msg
+            }
+        }
     }
 
     header: ToolBar {
@@ -284,10 +322,11 @@ Page {
                         onTriggered: electrodeSignalLinkMain.connectSignals()
                     }
                     MenuItem {
-                        text: qsTr("Close menu")
+                        text: qsTr("Reset")
                         font.pixelSize: 30
                         width: parent.width
                         height: 100
+                        onTriggered: resetDialog.open()
                     }
                     MenuItem {
                         text: qsTr("About")
@@ -297,22 +336,38 @@ Page {
                         onTriggered: aboutDialog.open()
                     }
                     MenuItem {
+                        text: qsTr("Save session")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
+                        onTriggered: {
+                            var session = {
+                                "images": setImagesForSave(),
+                                "minMax": [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                    electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
+                                "electrodeData": setElectrodeDataForSave(),
+                                "sameElectrodeData": setSameElectrodeDataForSave(),
+                            }
+                            saveSession(JSON.stringify(session, null, 4))
+                            loadSession(JSON.stringify(session))
+                        }
+                    }
+
+                    MenuItem {
                         text: qsTr("Exit")
                         font.pixelSize: 30
                         width: parent.width
                         height: 100
                         onTriggered: {
                             var session = {
-                                //                                "images": electrodePlacementMain.images,
+                                "images": setImagesForSave(),
                                 "minMax": [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
                                     electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
                                 "electrodeData": setElectrodeDataForSave(),
                                 "sameElectrodeData": setSameElectrodeDataForSave(),
-                                "trackData": setTrackDataForSave(),
                             }
-                            saveSession(JSON.stringify(session))
-                            loadSession(JSON.stringify(session))
-//                            window.exit()
+                            saveSession(JSON.stringify(session, null, 4))
+                            window.exit()
                         }
                     }
                 }
@@ -512,10 +567,31 @@ Page {
         folder: shortcuts.documents
         selectExisting: false
         nameFilters: [ qsTr("All files (*)") ]
-        onAccepted: {
-
-        }
+        onAccepted: { }
         onRejected: console.log("Saving file canceled.")
+    }
+
+    Dialog {
+        id: resetDialog
+        modal: true
+        focus: true
+        x: (window.width - width) / 2
+        y: window.height / 6
+        title: "<b>Are you sure?</b>"
+        standardButtons: Dialog.Ok | Dialog.Cancel
+        onAccepted: {
+            imageManagerMain.reset()
+            electrodeManagerMain.reset()
+            electrodeSignalLinkMain.reset()
+            electrodeSignalLinkMain.electrodes.clear()
+            electrodePlacementMain.reset()
+            electrodePlacementMain.images = []
+            electrodePlacementMain.electrodes.clear()
+        }
+
+        Label {
+            text: qsTr("Application will be reset to default state.")
+        }
     }
 
     Pages.XmlModels {

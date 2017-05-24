@@ -102,6 +102,32 @@ ElectrodeManagerForm {
 
         return chosenElectrodesList
     }
+
+    function setLoadedElectrode(rowCount, columnCount) {
+
+        if (rowCount === 1) {
+            for (var i = 0; i < stripRepeater.count; i++) {
+                if (stripRepeater.itemAt(i).stripColumns === columnCount) {
+                    stripRepeater.itemAt(i).count++
+                    return
+                }
+            }
+            stripModel.append({rows: rowCount, columns: columnCount})
+            stripRepeater.itemAt(stripRepeater.count-1).count++
+
+        } else {
+            for (var k = 0; k < gridRepeater.count; k++) {
+                if (gridRepeater.itemAt(k).gridColumns === columnCount) {
+                    if (gridRepeater.itemAt(k).gridRows === rowCount) {
+                        gridRepeater.itemAt(k).count++
+                        return
+                    }
+                }
+            }
+            gridModel.append({rows: rowCount, columns: columnCount})
+            gridRepeater.itemAt(gridRepeater.count-1).count++
+        }
+    }
 }
 
 

@@ -23,22 +23,32 @@ Dialog {
 
         Label {
             text: qsTr("Rows")
+            font.pixelSize: 30
         }
 
         SpinBox {
             id: rowSpinBox
             from: 1
             value: 1
+            width: 240
+            height: 60
+            up.indicator.width: 90
+            down.indicator.width: 90
         }
 
         Label {
             text: qsTr("Columns")
+            font.pixelSize: 30
         }
 
         SpinBox {
             id: columnSpinBox
             from: 1
             value: 5
+            width: 240
+            height: 60
+            up.indicator.width: 90
+            down.indicator.width: 90
         }
     }
 }

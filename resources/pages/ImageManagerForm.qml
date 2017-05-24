@@ -22,7 +22,6 @@ Page {
     property alias swipe: swipe
     property alias imageManager: imageManager
 
-
     SwipeView {
         id: swipe
         currentIndex: 0
