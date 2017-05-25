@@ -38,7 +38,6 @@ DragTrackForm {
             mouseArea.parent.trackName = trackName
             mouseArea.parent.trackId = trackId
             mouseArea.parent.spikes = spikes
-            console.log(trackName + " " + mouseArea.parent.spikes)
             tile.color = Universal.color(Universal.Cyan)
         }
     }
@@ -46,6 +45,10 @@ DragTrackForm {
     function resetPosition() {
         mouseArea.parent = root
         tile.color = "white"
+    }
+
+    function connectSignal(electrodeNum, rowNum, columnNum) {
+        mouseArea.parent = electrodeSignalLinkMain.elecRep.itemAt(electrodeNum).bElectrode.rowRep.itemAt(rowNum).colRep.itemAt(columnNum)
     }
 
     tile.states: State {

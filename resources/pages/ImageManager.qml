@@ -18,6 +18,43 @@ ImageManagerForm {
         return sourceArray
     }
 
+    function checkImage(imageSource) {
+        for (var k = 0; k < swipe.count; k++) {
+            for (var i = 0; i < swipe.itemAt(k).images.count; i++) {
+                if (swipe.itemAt(k).images.itemAt(i).source == imageSource) {
+                    swipe.itemAt(k).images.itemAt(i).checkbox.checked = true
+                    return
+                }
+            }
+        }
+
+        // in not in default choice, add picture and check it (checkbox)
+        var orderNum = getLastImageIndex()
+        swipe.itemAt(swipe.count-1).images.itemAt(orderNum).source = imageSource
+        swipe.itemAt(swipe.count-1).images.itemAt(orderNum).checkbox.checked = true
+
+        // add new empty picture
+        if (orderNum < swipe.itemAt(swipe.count-1).images.count - 1) {
+            swipe.itemAt(swipe.count-1).images.itemAt(orderNum+1).visible = true
+
+        } else {
+            swipe.addItem(newPage.createObject(swipe, {"imageModel": pluses}))
+            swipe.currentIndex++
+            console.log("Page number " + swipe.currentIndex + " was added to swipe. (Counting from zero.)")
+        }
+    }
+
+    function getLastImageIndex() {
+        // return index of plus picture (last picture in swipe)
+        for (var k = 0; k < swipe.count; k++) {
+            for (var i = 0; i < swipe.itemAt(k).images.count; i++) {
+                if (swipe.itemAt(k).images.itemAt(i).source == "qrc:/images/plus.png") {
+                    return i
+                }
+            }
+        }
+    }
+
     // implement next button
     function confirm() {
 

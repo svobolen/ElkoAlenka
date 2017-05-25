@@ -174,7 +174,6 @@ Item {
                                         if (linkedTracks.get(i).electrodeNumber === defaultName) {
                                             name = linkedTracks.get(i).wave
                                             trackName = linkedTracks.get(i).wave
-                                            console.log(trackName)
                                             spikes = linkedTracks.get(i).spikes
                                             electrodeText.font.bold = true
                                         }

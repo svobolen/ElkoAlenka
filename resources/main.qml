@@ -38,7 +38,7 @@ Page {
 
     onFileChanged: {
 
-        if (previousFile === "") signalLinkMain.refreshNeeded = true
+        if (previousFile === "" && sessionLoaded === false) signalLinkMain.refreshNeeded = true
 
         if (file.substring(0, file.length - 1) === previousFile) { // file is same (just different index at the end)
 
@@ -63,10 +63,13 @@ Page {
                         electrodePlacementMain.electrodeRep.itemAt(j).elec.children[k].basicE.deleteLinkedTracks()
                     }
                 }
+            } else {
+                electrodeSignalLinkMain.refreshLoadedNeeded = true
             }
         }
+        if (!sessionLoaded && previousFile!== "") changePage(1, electrodeManagerMain)
+
         previousFile = file.substring(0, file.length - 1)
-        //        if (listView.currentIndex === 3) changePage(2, signalLinkMain)
         sessionLoaded = false
     }
 
@@ -94,6 +97,11 @@ Page {
         var images = JsonObjectArray.images
         electrodePlacementMain.images = images
 
+        // check images in image manager
+        for (var a = 0; a < images.length; a++) {
+            imageManagerMain.checkImage(images[a])
+        }
+
         // mins a max in electrode placement
         var minMax = JsonObjectArray.minMax
         electrodePlacementMain.minSpikes = minMax[0]
@@ -107,15 +115,15 @@ Page {
             loadedLinks.clear()
             var currElec = electrodeData[i]
 
-            for (var n = 0; n < currElec.links.length; n++) {
-                loadedLinks.append(currElec.links[n])
-            }
-
             // set electrodes in Electrode Manager
             electrodeManagerMain.setLoadedElectrode(currElec.rows, currElec.columns);
 
             // set electrodes in Electrode Signal Link
             electrodeSignalLinkMain.electrodes.append({rows: currElec.rows, columns: currElec.columns})
+
+            for (var n = 0; n < currElec.links.length; n++) {
+                loadedLinks.append(currElec.links[n])
+            }
 
             // set electrodes in Electrode Placement
             electrodePlacementMain.electrodes.append({rows: currElec.rows,
@@ -126,10 +134,10 @@ Page {
                                                          eScale: currElec.eScale, eRotation: currElec.eRotation})
         }
 
-        // create same electrodes (copies) in electrode placement
         var sameElectrodeData = JsonObjectArray.sameElectrodeData
         for (var l = 0; l < electrodePlacementMain.electrodeRep.count; l++) {
 
+            // add same electrodes (copies) in electrode placement
             for (var m = 0; m < sameElectrodeData.length; m++) {
                 var childNum = 1
 
@@ -321,6 +329,7 @@ Page {
                         height: 100
                         onTriggered: electrodeSignalLinkMain.connectSignals()
                     }
+
                     MenuItem {
                         text: qsTr("Reset")
                         font.pixelSize: 30
@@ -328,6 +337,7 @@ Page {
                         height: 100
                         onTriggered: resetDialog.open()
                     }
+
                     MenuItem {
                         text: qsTr("About")
                         font.pixelSize: 30
@@ -335,6 +345,7 @@ Page {
                         height: 100
                         onTriggered: aboutDialog.open()
                     }
+
                     MenuItem {
                         text: qsTr("Save session")
                         font.pixelSize: 30
@@ -349,7 +360,6 @@ Page {
                                 "sameElectrodeData": setSameElectrodeDataForSave(),
                             }
                             saveSession(JSON.stringify(session, null, 4))
-                            loadSession(JSON.stringify(session))
                         }
                     }
 
@@ -460,6 +470,16 @@ Page {
 
                 onClicked: {
                     if (modelData.switchElement === true) {
+                        // save session when switched to Alenka
+                        var session = {
+                            "images": setImagesForSave(),
+                            "minMax": [electrodePlacementMain.minSpikes, electrodePlacementMain.maxSpikes,
+                                electrodePlacementMain.customMinSpikes, electrodePlacementMain.customMaxSpikes],
+                            "electrodeData": setElectrodeDataForSave(),
+                            "sameElectrodeData": setSameElectrodeDataForSave(),
+                        }
+                        saveSession(JSON.stringify(session, null, 4))
+                        // switch to Alenka
                         window.switchToAlenka()
 
                     } else if (listView.currentIndex != index){

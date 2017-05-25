@@ -69,6 +69,26 @@ ElectrodeSignalLinkForm {
         }
     }
 
+    function refreshLoadedTrack() {
+        // link signals in signalLinkMain
+        for (var l = 0; l < electrodePlacementMain.electrodeRep.count; l++) {
+            var currElecInRep = electrodePlacementMain.electrodeRep.itemAt(l).elec.children[0].basicE
+            for (var b = 0; b < currElecInRep.rowCount; b++) {
+
+                for (var c = 0; c < currElecInRep.columnCount; c++) {
+
+                    if (currElecInRep.rowRep.itemAt(b).colRep.itemAt(c).trackName !== "") {
+                        for (var d = 0; d < dragRep.count; d++) {
+                            if (dragRep.itemAt(d).trackName === currElecInRep.rowRep.itemAt(b).colRep.itemAt(c).trackName) {
+                                dragRep.itemAt(d).connectSignal(l, b, c)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function getTrackIndex(waveName) {
         for (var i = 0; i < dragRep.count; i++) {
             if (dragRep.itemAt(i).trackName === waveName) {
@@ -84,6 +104,11 @@ ElectrodeSignalLinkForm {
             refreshNeeded = false
             waitTimer.start()
         }
+        if (refreshLoadedNeeded && isActive) {
+            // refresh loaded linked tracks
+            refreshLoadedNeeded = false
+            waitLoadingTimer.start()
+        }
     }
 
     onRefreshNeededChanged: {
@@ -91,7 +116,14 @@ ElectrodeSignalLinkForm {
             // refresh linked tracks
             refreshNeeded = false
             waitTimer.start()
+        }
+    }
 
+    onRefreshLoadedNeededChanged: {
+        if (refreshLoadedNeeded && isActive) {
+            // refresh loaded linked tracks
+            refreshLoadedNeeded = false
+            waitLoadingTimer.start()
         }
     }
 
@@ -101,6 +133,15 @@ ElectrodeSignalLinkForm {
         onTriggered: {
             xmlModels.countSpikes()
             connectSignals()
+        }
+    }
+
+    Timer {
+        id: waitLoadingTimer
+        interval: 50
+        onTriggered: {
+            xmlModels.countSpikes()
+            refreshLoadedTrack()
         }
     }
 }

@@ -12,6 +12,7 @@ Controls.SplitView {
     property int maxSpikes: 0
     property int minSpikes: 0
     property bool refreshNeeded: false
+    property bool refreshLoadedNeeded: false
     readonly property bool isActive: window.listView.currentIndex == 2
 
     property alias elecRep: elecRep
