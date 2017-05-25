@@ -324,9 +324,9 @@ Page {
                     MenuItem {
                         visible: listView.currentIndex === 2
                         text: qsTr("Refresh")
-                        font.pixelSize: 30
+                        font.pixelSize: 20
                         width: parent.width
-                        height: 100
+                        height: 50
                         onTriggered: electrodeSignalLinkMain.connectSignals()
                     }
 
@@ -336,14 +336,6 @@ Page {
                         width: parent.width
                         height: 100
                         onTriggered: resetDialog.open()
-                    }
-
-                    MenuItem {
-                        text: qsTr("About")
-                        font.pixelSize: 30
-                        width: parent.width
-                        height: 100
-                        onTriggered: aboutDialog.open()
                     }
 
                     MenuItem {
@@ -361,6 +353,13 @@ Page {
                             }
                             saveSession(JSON.stringify(session, null, 4))
                         }
+                    }
+                    MenuItem {
+                        text: qsTr("About")
+                        font.pixelSize: 30
+                        width: parent.width
+                        height: 100
+                        onTriggered: aboutDialog.open()
                     }
 
                     MenuItem {
@@ -425,7 +424,6 @@ Page {
                     radius: width / 2
                     color: index === pageIndicator.currentIndex ? Universal.color(Universal.Cyan)  : pageIndicator.Universal.baseLowColor
                 }
-
             }
 
             ToolButton {

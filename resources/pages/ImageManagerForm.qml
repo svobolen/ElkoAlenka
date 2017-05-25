@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.1
+import QtQuick.Controls.Universal 2.1
 
 Page {
     id: imageManager
@@ -46,8 +47,8 @@ Page {
 
             Label {
                 id: label
-                text: qsTr("Choose one or more images. You can upload your own photos or pictures.")
-                font {pixelSize: 13; italic: true}
+                text: swipe.currentIndex === 0 ? qsTr("Photo upload avalaible on next page >>") : ""
+                font {pixelSize: 25; italic: true}
                 width: parent.width
                 z: 2
                 anchors {margins: 5; left: parent.left; right: parent.right}
@@ -73,20 +74,6 @@ Page {
                     }
                 }
             }
-
-//            PinchArea {
-//                anchors.fill: parent
-//                pinch.target: secondPage
-//                pinch.minimumScale: 1
-//                pinch.maximumScale: 10
-//                pinch.dragAxis: Pinch.XAndYAxis
-//                onSmartZoom: { secondPage.scale = pinch.scale }
-//                onPinchFinished: {
-//                    secondPage.scale = 1
-//                    secondPage.x = swipe.currentItem.width * swipe.currentIndex
-//                    secondPage.y = 0
-//                }
-//            }
         }
     }
 
@@ -95,5 +82,13 @@ Page {
         count: swipe.count
         currentIndex: swipe.currentIndex
         anchors {bottom: parent.bottom; horizontalCenter: parent.horizontalCenter}
+        delegate: Rectangle {
+            implicitWidth: 10
+            implicitHeight: 10
+
+            radius: width / 2
+            color: index === indicator.currentIndex ? indicator.Universal.baseMediumHighColor :
+                                                           pressed ? indicator.Universal.baseMediumLowColor : indicator.Universal.baseLowColor
+        }
     }
 }
