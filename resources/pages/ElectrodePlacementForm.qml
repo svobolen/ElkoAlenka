@@ -38,7 +38,7 @@ Controls.SplitView {
     orientation: Qt.Horizontal
     onMinSpikesChanged: customMinSpikes = minSpikes
     onMaxSpikesChanged: customMaxSpikes = maxSpikes
-    onImagesChanged: reset()
+//    onImagesChanged: reset()
 
     DropArea {
         id: imageArea
